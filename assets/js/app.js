@@ -41,11 +41,19 @@
 
   function smoothScroll() {
     if (!window.Lenis) return null;
-    const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+    // duration + exponential ease = the familiar "buttery" Lenis feel (a bare lerp stops abruptly)
+    const lenis = new Lenis({
+      duration: 1.3,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+    });
     window.__lenis = lenis;
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.add((t) => lenis.raf(t * 1000));   // one shared clock for Lenis + GSAP
     gsap.ticker.lagSmoothing(0);
+    ScrollTrigger.config({ ignoreMobileResize: true });
     return lenis;
   }
 
@@ -92,21 +100,14 @@
     if (!$('[data-hero]')) return null;
     // built paused so the hidden start state is applied immediately; played when the curtain lifts
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
-    tl.from('[data-hero-badge]', { opacity: 0, y: 20, duration: .6 })
-      .from('[data-line]', { yPercent: 115, duration: 1, stagger: .12, ease: 'expo.out' }, '-=.3')
-      .from('[data-hero-p]', { opacity: 0, y: 24, duration: .7 }, '-=.6')
-      .from('[data-hero-cta] > *', { opacity: 0, y: 24, duration: .6, stagger: .1 }, '-=.5')
-      .from('[data-hero-stat]', { opacity: 0, y: 24, duration: .6, stagger: .1 }, '-=.4')
-      .fromTo('[data-hero-img]', { clipPath: 'inset(0 0 100% 0 round 1rem)' }, { clipPath: 'inset(0 0 0% 0 round 1rem)', duration: 1.3, ease: 'expo.inOut' }, 0.1)
-      .from('[data-hero-img] img', { scale: 1.35, duration: 1.8, ease: 'expo.out' }, 0.1)
-      .from('[data-hero-chip]', { opacity: 0, scale: .6, y: 20, duration: .8, ease: 'back.out(1.8)' }, '-=.6');
+    // slide content is animated by CSS (index.html heroSlider); GSAP only fades the whole slider and stats in
+    tl.from('[data-hero-slider]', { opacity: 0, y: 30, duration: .9 })
+      .from('[data-hero-stat]', { opacity: 0, y: 24, duration: .6, stagger: .1 }, '-=.4');
 
     // drifting background blobs
     $$('[data-blob]').forEach((el, i) => gsap.to(el, {
       x: i % 2 ? -50 : 60, y: i % 2 ? 40 : -50, duration: 7 + i * 2, repeat: -1, yoyo: true, ease: 'sine.inOut',
     }));
-    // hero image drifts up slightly while scrolling away
-    gsap.to('[data-hero-img]', { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: true } });
     return tl;
   }
 
@@ -168,9 +169,6 @@
       scale: 0, rotate: -180, duration: .7, ease: 'back.out(2)',
       scrollTrigger: { trigger: t, start: 'top 92%', once: true },
     }));
-    // contact section: soft light sweeping across the gradient
-    const c = $('#contact .blueprint');
-    if (c) gsap.to(c, { backgroundPosition: '80px 80px', duration: 20, ease: 'none', repeat: -1 });
     // section colour blobs drift with scroll
     $$('[data-blob]').forEach((b) => {
       if (b.closest('[data-hero]')) return;

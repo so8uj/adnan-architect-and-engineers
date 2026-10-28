@@ -7,12 +7,14 @@
   const S = window.SITE;
   const page = location.pathname.split('/').pop() || 'index.html';
   const onPortfolio = page === 'portfolio.html' || page === 'project.html';
+  const onInsights = page === 'insights.html' || page === 'insight.html';
 
   const links = [
     { label: 'হোম', href: 'index.html', active: page === 'index.html' || page === '' },
     { label: 'সেবা', href: 'index.html#services' },
     { label: 'আমাদের কাজ', href: 'portfolio.html', active: onPortfolio },
     { label: 'কার্যক্রম', href: 'index.html#activities' },
+    { label: 'ইনসাইট', href: 'insights.html', active: onInsights },
     { label: 'কাজের ধাপ', href: 'index.html#process' },
     { label: 'আমাদের সম্পর্কে', href: 'index.html#about' },
     { label: 'যোগাযোগ', href: 'index.html#contact' },
@@ -42,7 +44,7 @@
   </div>
 
   <header id="site-header" x-data="{menu:false, scrolled:false}" @scroll.window.passive="scrolled = window.scrollY > 10"
-          class="sticky top-0 z-40 transition-shadow bg-white/90 backdrop-blur border-b border-gray-100" :class="scrolled && 'shadow-md'">
+          class="sticky top-0 z-40 transition-shadow bg-white/95 border-b border-gray-100" :class="scrolled && 'shadow-md'">
     <div class="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
       <a href="index.html" class="flex items-center" aria-label="Adnan Architects &amp; Engineers"><img src="assets/img/logo.png" alt="Adnan Architects &amp; Engineers" class="h-12 w-auto"></a>
       <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium">${navDesktop}</nav>
@@ -87,9 +89,17 @@
     <div class="border-t border-white/10 py-5 text-center text-xs">© ${new Date().getFullYear()} Adnan Architects &amp; Engineers. সর্বস্বত্ব সংরক্ষিত।</div>
   </footer>
 
-  <a href="tel:${S.phone}" data-magnetic class="fixed bottom-5 right-5 z-30 grid place-items-center h-14 w-14 rounded-full bg-brand-600 text-white shadow-xl shadow-brand-600/40 hover:bg-brand-700 transition" aria-label="কল করুন">
-    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg>
-  </a>`;
+  <div class="fixed bottom-5 right-5 z-30 flex flex-col items-center gap-3">
+    <a href="https://m.me/${S.messenger}?text=${encodeURIComponent(S.greeting)}" target="_blank" rel="noopener" data-magnetic title="Messenger" class="grid place-items-center h-14 w-14 rounded-full bg-[#0084FF] text-white shadow-xl shadow-[#0084FF]/40 hover:brightness-110 transition" aria-label="Messenger-এ মেসেজ করুন">
+      <svg class="h-7 w-7" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.2 2 11.5c0 2.9 1.3 5.4 3.4 7.1V22l3.1-1.7c.8.2 1.6.3 2.5.3 5.5 0 10-4.2 10-9.5S17.5 2 12 2z"/><path fill="#0084FF" d="M5.8 14.2l3.5-3.7 2.6 2 3.9-2.3-3.6 3.8-2.6-2-3.8 2.2z"/></svg>
+    </a>
+    <a href="https://wa.me/${S.whatsapp}?text=${encodeURIComponent(S.greeting)}" target="_blank" rel="noopener" data-magnetic title="WhatsApp" class="grid place-items-center h-14 w-14 rounded-full bg-[#25D366] text-white shadow-xl shadow-[#25D366]/40 hover:brightness-110 transition" aria-label="WhatsApp-এ মেসেজ করুন">
+      <svg class="h-7 w-7" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2z"/><path fill="#25D366" transform="translate(6.2 6.2) scale(.5)" d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg>
+    </a>
+    <a href="tel:${S.phone}" data-magnetic title="কল করুন" class="grid place-items-center h-14 w-14 rounded-full bg-brand-600 text-white shadow-xl shadow-brand-600/40 hover:bg-brand-700 transition" aria-label="কল করুন">
+      <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg>
+    </a>
+  </div>`;
 
   document.body.insertAdjacentHTML('afterbegin', head);
   document.body.insertAdjacentHTML('beforeend', foot);

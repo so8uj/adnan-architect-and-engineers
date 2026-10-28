@@ -7,6 +7,26 @@
   background-size: 40px 40px;
 }
 
+/* Soft glow blobs. A CSS blur() filter on a huge animated element is repainted every frame and makes
+   scrolling janky, so the blur is replaced by a radial mask (same look, no filter) on its own GPU layer. */
+[data-blob] {
+  filter: none !important;
+  -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  will-change: transform;
+}
+
+.no-scrollbar { scrollbar-width: none }
+.no-scrollbar::-webkit-scrollbar { display: none }
+
+/* Light version for white-tone sections */
+.blueprint-light {
+  background-image:
+    linear-gradient(rgba(17, 24, 39, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 24, 39, .045) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
 /* Lenis smooth scroll */
 html.lenis, html.lenis body { height: auto }
 .lenis.lenis-smooth { scroll-behavior: auto !important }

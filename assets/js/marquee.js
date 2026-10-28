@@ -9,7 +9,7 @@
     const tracks = Array.from(document.querySelectorAll('[data-marquee]'));
     if (!tracks.length) return;
 
-    let hover = 1, boost = 0, current = 1, lastY = window.scrollY;
+    let hover = 1, boost = 0, current = 1, applied = 1, lastY = window.scrollY;
     tracks.forEach((t) => {
       t.parentElement.addEventListener('mouseenter', () => { hover = .2; });
       t.parentElement.addEventListener('mouseleave', () => { hover = 1; });
@@ -23,7 +23,10 @@
       const target = (1 + Math.min(boost / 5, 5)) * hover;   // 1x idle ... 6x while scrolling fast
       current += (target - current) * .08;
       if (!isFinite(current)) current = 1;                   // never let a bad number freeze it
-      tracks.forEach((t) => t.getAnimations().forEach((a) => a.updatePlaybackRate(current)));
+      if (Math.abs(current - applied) > .01) {                // only touch the animation when the speed really changed
+        applied = current;
+        tracks.forEach((t) => t.getAnimations().forEach((a) => a.updatePlaybackRate(current)));
+      }
       requestAnimationFrame(tick);
     })();
   }

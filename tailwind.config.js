@@ -1,4 +1,6 @@
-tailwind.config = {
+/** Tailwind is compiled to assets/css/tailwind.css (npm run build:css) so the site works fully offline. */
+module.exports = {
+  content: ['./*.html', './assets/js/**/*.js'],
   theme: {
     extend: {
       fontFamily: {
@@ -11,4 +13,4 @@ tailwind.config = {
       },
     },
   },
-}
+};
