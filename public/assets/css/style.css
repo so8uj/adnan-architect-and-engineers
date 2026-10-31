@@ -1,0 +1,178 @@
+[x-cloak] { display: none !important }
+
+.blueprint {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Soft glow blobs. A CSS blur() filter on a huge animated element is repainted every frame and makes
+   scrolling janky, so the blur is replaced by a radial mask (same look, no filter) on its own GPU layer. */
+[data-blob] {
+  filter: none !important;
+  -webkit-mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 20%, transparent 100%);
+  will-change: transform;
+}
+
+.no-scrollbar { scrollbar-width: none }
+.no-scrollbar::-webkit-scrollbar { display: none }
+
+/* Light version for white-tone sections */
+.blueprint-light {
+  background-image:
+    linear-gradient(rgba(17, 24, 39, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 24, 39, .045) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto }
+.lenis.lenis-smooth { scroll-behavior: auto !important }
+.lenis.lenis-stopped { overflow: hidden }
+
+/* Page curtain: if JS/GSAP fails to load, hide it by itself after a few seconds */
+#page-curtain { animation: curtainFailsafe .01s 12s forwards }
+@keyframes curtainFailsafe { to { opacity: 0; visibility: hidden } }
+
+/* Image zoom on card hover */
+.img-zoom img { transition: transform .9s cubic-bezier(.2, .7, .2, 1) }
+.group:hover .img-zoom img { transform: scale(1.07) }
+
+/* Gradient text helper */
+.text-gradient {
+  background-image: linear-gradient(90deg, rgb(var(--brand-400)), rgb(var(--brand-600)));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+
+/* Card shine that follows the cursor (set by app.js) */
+.shine { position: relative; overflow: hidden }
+.shine::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgb(var(--brand-600) / .10), transparent 60%);
+}
+.shine:hover::after { opacity: 1 }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto }
+}
+
+/* Service marquee: pure CSS so it always runs (no JS/GSAP dependency). marquee.js only adds scroll-speed boost. */
+@keyframes marquee-right { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+@keyframes marquee-left  { from { transform: translateX(0) }    to { transform: translateX(-50%) } }
+[data-marquee] { animation: marquee-right 28s linear infinite; will-change: transform }
+[data-marquee="left"] { animation-name: marquee-left }
+@media (prefers-reduced-motion: reduce) {
+  [data-marquee] { animation-duration: 80s }   /* still moves, just very slowly */
+}
+
+/* ------------------------------------------------------------------
+   Theme. Colours come from CSS variables that Admin -> Theme writes into the page (see App\Support\Theme):
+   --bg, --surface, --text, --brand-*.  The values below are only fallbacks.
+   html.dark switches to the dark set. The page is built from a handful of "light surface" utilities, so the
+   dark theme re-maps exactly those instead of sprinkling dark: variants over every element.
+   The intentionally dark sections (process, testimonials, footer, red bands) are left alone.
+   ------------------------------------------------------------------ */
+:root { --bg: 255 255 255; --surface: 255 255 255; --text: 28 28 31 }
+html.dark { color-scheme: dark; --bg: 13 13 16; --surface: 23 23 27; --text: 236 236 240 }
+body { background-color: rgb(var(--bg)); color: rgb(var(--text)) }
+
+/* surfaces */
+.bg-white { background-color: rgb(var(--surface)) }
+.bg-white\/95 { background-color: rgb(var(--bg) / .95) }
+.dark .bg-gray-50 { background-color: #101013 }
+.dark .bg-gray-100 { background-color: #1c1c21 }
+.dark .bg-gray-200 { background-color: #25252b }
+.dark .bg-gray-300 { background-color: #3a3a42 }
+.dark .bg-brand-50 { background-color: rgb(var(--brand-600) / .14) }
+.dark .bg-brand-100\/70 { background-color: rgb(var(--brand-600) / .16) }
+
+/* things that must stay white in both themes */
+.bg-white\/90,
+.bg-white.text-brand-700,
+footer .bg-white,
+#page-curtain .bg-white { background-color: #fff; color: #1c1c1f }
+
+/* text */
+.text-ink-800 { color: rgb(var(--text)) }
+.dark .text-gray-500 { color: #9d9da8 }
+.dark .text-gray-600 { color: #b4b4bf }
+.dark .text-gray-700 { color: #cacad3 }
+.dark .text-brand-700 { color: #ff8a66 }
+
+/* lines */
+.dark .border-gray-50,
+.dark .border-gray-100,
+.dark .border-gray-200 { border-color: rgba(255, 255, 255, .09) }
+.dark .border-gray-300 { border-color: rgba(255, 255, 255, .18) }
+.dark .border-brand-100 { border-color: rgb(var(--brand-600) / .3) }
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(255, 255, 255, .09) }
+.dark .ring-gray-100,
+.dark .ring-gray-200 { --tw-ring-color: rgba(255, 255, 255, .1) }
+
+/* form fields, light grid, header logo (black text needs a light plate) */
+.dark input, .dark textarea, .dark select { background-color: #1c1c21; color: rgb(var(--text)) }
+.dark .blueprint-light {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+}
+.dark #site-header img { background: #fff; border-radius: .5rem; padding: 2px 6px }
+
+/* Preloader / language-switch overlay: frosted glass (transparent + blur, like the header) with the logo in the middle */
+.preloader {
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+}
+.dark .preloader { background: rgba(13, 13, 16, .6) }
+.preloader-bar { width: 9rem; height: 3px; border-radius: 9999px; background: rgba(28, 28, 31, .12); overflow: hidden }
+.dark .preloader-bar { background: rgba(255, 255, 255, .18) }
+.preloader-bar::after { content: ''; display: block; height: 100%; width: 40%; border-radius: inherit; background: rgb(var(--brand-600)); animation: preloaderBar 1.1s ease-in-out infinite }
+@keyframes preloaderBar { from { transform: translateX(-100%) } to { transform: translateX(250%) } }
+.preloader [data-curtain-logo] > div:first-child { box-shadow: 0 18px 50px rgba(0, 0, 0, .18); border: 1px solid rgba(28, 28, 31, .06) }
+
+/* The same look as pure CSS, so it is on screen before any script runs:
+   html.lang-out  = fading in just before the page reloads, html.lang-in = covering the freshly loaded page, then fading away */
+html.lang-out::before, html.lang-in::before {
+  content: ''; position: fixed; inset: 0; z-index: 2147483000; pointer-events: none;
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+}
+html.dark.lang-out::before, html.dark.lang-in::before { background: rgba(13, 13, 16, .6) }
+html.lang-out::after, html.lang-in::after {
+  content: ''; position: fixed; z-index: 2147483001; left: 50%; top: 50%; width: 200px; height: 130px; margin: -65px 0 0 -100px;
+  box-sizing: border-box; padding: 20px; border-radius: 1rem; pointer-events: none;
+  background: #fff url(../img/logo.png) center / contain no-repeat; background-origin: content-box;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .18); border: 1px solid rgba(28, 28, 31, .06);
+}
+html.lang-out::before, html.lang-out::after { opacity: 0; animation: ovIn .25s ease forwards }
+html.lang-in::before, html.lang-in::after { animation: ovOut .5s ease .55s forwards }
+@keyframes ovIn { to { opacity: 1 } }
+@keyframes ovOut { to { opacity: 0; visibility: hidden } }
+
+/* Theme switch: smooth colour change (only colour properties, so GSAP-driven transforms are untouched) */
+html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
+  transition: background-color .35s ease, color .35s ease, border-color .35s ease, fill .35s ease, stroke .35s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.lang-out::before, html.lang-out::after, html.lang-in::before, html.lang-in::after { display: none }
+  .preloader-bar::after { animation: none; width: 100% }
+}
+
+/* Insight article body (HTML written in the admin) */
+.article-body { color: inherit; line-height: 2 }
+.article-body > * + * { margin-top: 1.25rem }
+.article-body h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; line-height: 1.5 }
+.article-body h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem }
+.article-body p { color: rgb(var(--text) / .85) }
+.article-body ul, .article-body ol { padding-left: 1.4rem; display: grid; gap: .5rem; color: rgb(var(--text) / .85) }
+.article-body ul { list-style: disc }
+.article-body ol { list-style: decimal }
+.article-body li::marker { color: rgb(var(--brand-600)) }
+.article-body a { color: rgb(var(--brand-600)); text-decoration: underline }
+.article-body img { max-width: 100%; height: auto; border-radius: 1rem }
+.article-body blockquote { border-left: 4px solid rgb(var(--brand-600)); padding-left: 1rem; font-style: italic }

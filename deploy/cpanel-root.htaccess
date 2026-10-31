@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# cPanel: put this file in the PROJECT ROOT on the server and rename it to ".htaccess"
+# (the same folder that contains app/, public/, vendor/, artisan, .env).
+# It sends every request into the public/ folder, so the site opens normally instead of
+# showing the file list or a 403 / 404, and it keeps .env and the source folders private.
+#
+# Best of all (no file needed): cPanel -> Domains -> Manage -> Document Root = <project>/public
+# Use this file only when you cannot change the document root.
+# ---------------------------------------------------------------------------
+
+Options -Indexes
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1) Never serve secrets or source code, even by typing the address
+    RewriteRule ^(\.env.*|\.git.*|\.htaccess|artisan|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|tailwind\.config\.js|README\.md)$ - [F,L,NC]
+    RewriteRule ^(app|bootstrap|config|database|deploy|lang|node_modules|resources|routes|storage|tests|vendor)(/|$) - [F,L,NC]
+
+    # 2) Everything else is handled by public/ (its own .htaccess then runs Laravel)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# If your host needs the PHP version forced, cPanel -> MultiPHP Manager -> pick PHP 8.3 or 8.4 for this domain
+# (it writes the AddHandler line here automatically; do not remove that block if it appears below).

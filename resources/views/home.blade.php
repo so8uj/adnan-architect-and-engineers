@@ -1,0 +1,696 @@
+@extends('layouts.site')
+
+@section('xdata', 'site()')
+
+@section('content')
+@verbatim
+<main>
+    <!-- HERO SLIDER (white tone) -->
+    <section id="home" data-hero x-data="heroSlider()" class="relative overflow-hidden bg-white text-ink-800 blueprint-light"
+      @mouseenter="paused = true" @mouseleave="paused = false" @touchstart.passive="touchX = $event.touches[0].clientX"
+      @touchend.passive="swipe($event.changedTouches[0].clientX)">
+      <div data-blob class="absolute -top-40 -right-40 h-[32rem] w-[32rem] rounded-full bg-brand-100/70 blur-3xl"></div>
+      <div data-blob class="absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-brand-50 blur-3xl"></div>
+
+      <!-- Prev / next: vertically centred on the left and right edges -->
+      <button type="button" @click="prev()" aria-label="আগের স্লাইড"
+        class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 grid place-items-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-brand-600 text-white text-xl shadow-lg shadow-brand-600/30 hover:bg-ink-950 hover:shadow-ink-950/30 transition">‹</button>
+      <button type="button" @click="next()" aria-label="পরের স্লাইড"
+        class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 grid place-items-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-brand-600 text-white text-xl shadow-lg shadow-brand-600/30 hover:bg-ink-950 hover:shadow-ink-950/30 transition">›</button>
+
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-16 pt-12 pb-12 lg:pt-16 lg:pb-16">
+        <!-- All slides share one grid cell, so the section height = tallest slide (no jumping) -->
+        <div data-hero-slider class="grid">
+          <template x-for="(s, n) in slides" :key="s.title1">
+            <article class="col-start-1 row-start-1 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center transition-opacity duration-700"
+              :class="n === i ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'" :aria-hidden="n !== i"
+              :inert="n !== i">
+              <div>
+                <span
+                  class="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 transition duration-700 ease-out"
+                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
+                  :style="n === i ? 'transition-delay:.15s' : ''">
+                  <span class="h-2 w-2 rounded-full bg-brand-600 animate-pulse"></span> <span x-text="s.badge"></span>
+                </span>
+                <h1 class="mt-6 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.5] transition duration-700 ease-out"
+                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                  :style="n === i ? 'transition-delay:.25s' : ''">
+                  <span class="block" x-text="s.title1"></span>
+                  <span class="block text-gradient py-1" x-text="s.title2"></span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-600 max-w-xl leading-relaxed transition duration-700 ease-out"
+                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                  :style="n === i ? 'transition-delay:.35s' : ''" x-text="s.text"></p>
+                <div class="mt-8 flex flex-wrap gap-3 transition duration-700 ease-out"
+                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                  :style="n === i ? 'transition-delay:.45s' : ''">
+                  <a :href="s.cta.href" data-magnetic
+                    class="rounded-full bg-brand-600 hover:bg-brand-700 text-white px-7 py-3.5 font-semibold transition shadow-lg shadow-brand-600/25"
+                    x-text="s.cta.label"></a>
+                  <a href="tel:01673092580" data-magnetic
+                    class="rounded-full border border-gray-300 text-ink-800 hover:border-brand-600 hover:text-brand-600 px-7 py-3.5 font-semibold transition">📞
+                    01673092580</a>
+                </div>
+              </div>
+
+              <div class="relative transition duration-1000 ease-out"
+                :class="n === i ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'"
+                :style="n === i ? 'transition-delay:.2s' : ''">
+                <div class="absolute -inset-3 rounded-3xl bg-gradient-to-br from-brand-500/25 to-transparent blur-xl"></div>
+                <div class="relative aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-gray-200 shadow-2xl">
+                  <img :src="s.image" :alt="s.title1 + ' ' + s.title2" :loading="n === 0 ? 'eager' : 'lazy'"
+                    class="h-full w-full transition-transform duration-[1600ms] ease-out"
+                    :class="[n === i ? 'scale-100' : 'scale-110', s.fit === 'contain' ? 'object-contain p-3' : 'object-cover']"
+                    :style="'object-position:' + (s.pos || 'center')">
+                </div>
+                <div class="absolute -bottom-5 -left-3 sm:-left-6">
+                  <div data-float class="bg-white text-ink-800 rounded-xl shadow-xl ring-1 ring-gray-100 px-5 py-4 flex items-center gap-3">
+                    <span class="grid place-items-center h-11 w-11 rounded-full bg-brand-50 text-brand-600 text-xl" x-text="s.chip.icon"></span>
+                    <div>
+                      <p class="text-sm font-bold" x-text="s.chip.title"></p>
+                      <p class="text-xs text-gray-500" x-text="s.chip.sub"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </template>
+        </div>
+
+        <!-- Slider controls -->
+        <div class="mt-12 flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <template x-for="(s, n) in slides" :key="'d' + n">
+              <button type="button" @click="go(n)" :aria-label="t('স্লাইড') + ' ' + (n + 1)" :aria-current="n === i"
+                class="flex items-center py-3">   <!-- tall invisible button = easy to tap; the bar below is only the visual -->
+                <span class="relative block h-2 rounded-full overflow-hidden transition-all duration-500"
+                  :class="n === i ? 'w-14 bg-brand-500' : 'w-6 bg-gray-300 hover:bg-gray-400'">
+                  <span class="absolute inset-y-0 left-0 bg-brand-700 rounded-full"
+                    :style="'width:' + (n === i ? progress : 0) + '%'"></span>
+                </span>
+              </button>
+            </template>
+          </div>
+        </div>
+
+        <dl class="mt-10 grid grid-cols-3 divide-x divide-gray-200 max-w-xl rounded-2xl bg-white border border-gray-200 shadow-sm">
+          <template x-for="s in stats" :key="s.label">
+            <div data-hero-stat class="px-4 py-5 text-center">
+              <dt class="text-2xl sm:text-3xl font-display font-bold text-brand-600"><span :data-count="s.value" :data-suffix="s.suffix"
+                  x-text="num(s.value) + s.suffix"></span></dt>
+              <dd class="text-xs sm:text-sm text-gray-500 mt-1" x-text="s.label"></dd>
+            </div>
+          </template>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Marquee of services: one plain brand-colour band, endless loop moving left -> right -->
+    <div class="bg-brand-600 text-white overflow-hidden py-4 select-none" aria-label="আমাদের সেবা সমূহ">
+      <div class="flex whitespace-nowrap w-max" data-marquee="left">
+        <!-- list is doubled so the GSAP loop (translateX -50% -> 0) is seamless -->
+        <template x-for="(s,i) in [...services, ...services]" :key="i">
+          <span class="flex items-center font-semibold text-lg sm:text-xl">
+            <span class="px-6 sm:px-8" x-text="s.title"></span><span class="text-white/60">✦</span>
+          </span>
+        </template>
+      </div>
+    </div>
+
+    <!-- INTRO / MD MESSAGE: contained video, grows from 0.5 to 1 with scroll (GSAP scrub in app.js) -->
+    <section id="intro" class="relative overflow-hidden bg-white min-h-screen flex items-center py-16"
+      x-data="{ playing: false, v: null,
+        play() { const v = window.parseVideo(intro.video); if (!v) return; this.v = v; this.playing = true; },
+        stop() { this.playing = false; this.v = null; } }"
+      @keydown.escape.window="stop()">
+      <div class="mx-auto w-full max-w-7xl px-4">
+        <!-- no CSS transform/transition classes here: GSAP owns this element's scale -->
+        <div data-scale-video class="relative mx-auto max-w-6xl aspect-video overflow-hidden rounded-3xl bg-ink-950 shadow-2xl ring-1 ring-gray-200">
+          <img :src="intro.poster" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover">
+          <div class="absolute inset-0 bg-ink-950/30"></div>
+
+          <button type="button" @click="play()" :disabled="!hasIntroVideo" aria-label="ভিডিও চালু করুন"
+            class="group absolute inset-0 grid place-items-center disabled:cursor-default">
+            <span class="relative grid place-items-center h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-brand-600 text-white shadow-2xl shadow-brand-600/50 group-hover:scale-110 transition duration-300">
+              <span x-show="hasIntroVideo" class="absolute inset-0 rounded-full bg-brand-600 animate-ping opacity-40"></span>
+              <svg class="relative h-9 w-9 sm:h-12 sm:w-12 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </button>
+
+          <!-- inline player fills the frame -->
+          <div x-show="playing" x-cloak x-transition.opacity.duration.300ms class="absolute inset-0 z-20 bg-black">
+            <template x-if="playing && v && v.kind === 'iframe'">
+              <iframe :src="v.src" class="h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="ভিডিও"></iframe>
+            </template>
+            <template x-if="playing && v && v.kind === 'file'">
+              <video :src="v.src" class="h-full w-full" controls autoplay playsinline></video>
+            </template>
+            <button @click="stop()" class="absolute top-3 right-4 z-30 grid place-items-center h-10 w-10 rounded-full bg-black/60 hover:bg-brand-600 text-white text-2xl leading-none transition" aria-label="বন্ধ করুন">&times;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="py-20 lg:py-28 bg-gray-50">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-brand-600 font-semibold tracking-wide">আমাদের সেবা সমূহ</p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">ভবন নির্মাণের প্রতিটি ধাপে আপনার পাশে</h2>
+          <p class="mt-4 text-gray-600">অভিজ্ঞ আর্কিটেক্ট ও ইঞ্জিনিয়ার টিমের মাধ্যমে প্রয়োজনীয় সব ড্রইং, ডিজাইন ও
+            অনুমোদন সেবা।</p>
+        </div>
+
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <template x-for="(s,i) in services" :key="s.title">
+            <article data-reveal data-shine
+              class="group relative rounded-2xl bg-white p-6 border border-gray-100 hover:border-brand-500/40 hover:shadow-xl hover:-translate-y-1 transition duration-300">
+              <div class="flex items-start justify-between">
+                <span
+                  class="grid place-items-center h-12 w-12 rounded-xl bg-brand-50 text-brand-600 group-hover:bg-brand-600 group-hover:text-white group-hover:rotate-6 transition duration-300">
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                    stroke-linejoin="round" viewBox="0 0 24 24" x-html="s.icon"></svg>
+                </span>
+                <span class="font-display text-3xl font-bold text-gray-100 group-hover:text-brand-100 transition"
+                  x-text="String(i+1).padStart(2,'0')"></span>
+              </div>
+              <h3 class="mt-5 text-lg font-semibold" x-text="s.title"></h3>
+              <p class="mt-2 text-sm text-gray-600 leading-relaxed" x-text="s.desc"></p>
+            </article>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="py-20 lg:py-28">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6" data-reveal>
+          <div class="max-w-2xl">
+            <p class="text-brand-600 font-semibold tracking-wide">আমাদের কাজ</p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">সম্পন্ন প্রজেক্টের নমুনা</h2>
+            <p class="mt-4 text-gray-600">যেকোনো প্রজেক্টে ক্লিক করে সব ড্রইং ও বিস্তারিত বিবরণ দেখুন।</p>
+          </div>
+          <a href="/portfolio"
+            class="inline-flex items-center gap-2 font-semibold text-brand-600 hover:gap-3 transition-all">সব প্রজেক্ট দেখুন
+            <span>→</span></a>
+        </div>
+
+        <div class="mt-10 grid md:grid-cols-2 gap-6">
+          <template x-for="p in projects" :key="p.slug">
+            <a :href="'/project/' + p.slug" data-reveal="clip"
+              class="group relative block rounded-3xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition duration-500">
+              <div class="img-zoom aspect-[4/3] overflow-hidden">
+                <img :src="p.cover" :alt="p.title" loading="lazy" class="h-full w-full object-cover"
+                  :style="'object-position:' + p.coverPos">
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/20 to-transparent"></div>
+              <div class="absolute bottom-0 inset-x-0 p-6 sm:p-8 text-white">
+                <div class="flex flex-wrap gap-2">
+                  <span class="text-xs font-medium rounded-full bg-brand-600 px-3 py-1" x-text="p.category"></span>
+                  <span class="text-xs font-medium rounded-full bg-white/15 backdrop-blur px-3 py-1"
+                    x-text="num(p.images.length) + t('টি ড্রইং')"></span>
+                </div>
+                <h3 class="mt-3 text-xl sm:text-2xl font-bold leading-snug" x-text="p.title"></h3>
+                <p class="mt-1 text-sm text-gray-300" x-text="p.tagline"></p>
+                <span
+                  class="mt-5 inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-4 transition-all">বিস্তারিত
+                  দেখুন <span>→</span></span>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITIES -->
+    <section id="activities" class="py-20 lg:py-28 bg-gray-50">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-brand-600 font-semibold tracking-wide">গ্যালারি</p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">আমাদের কার্যক্রম</h2>
+          <p class="mt-4 text-gray-600">সাইট পরিদর্শন ও কাজের তদারকির নিয়মিত কিছু মুহূর্ত। ছবিতে ক্লিক করে বড় করে দেখুন।</p>
+        </div>
+
+        <div class="mt-12 columns-2 md:columns-3 gap-4 [&>*]:mb-4">
+          <template x-for="(a,i) in activities" :key="a.src">
+            <button type="button" @click="openLb(i)" data-reveal="clip"
+              class="group relative block w-full break-inside-avoid overflow-hidden rounded-2xl bg-gray-200 cursor-zoom-in shadow-sm hover:shadow-2xl transition-shadow duration-500 text-left">
+              <div class="img-zoom overflow-hidden">
+                <img :src="a.src" :alt="a.title" loading="lazy" class="w-full h-auto block">
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-ink-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500">
+              </div>
+              <div
+                class="absolute bottom-0 inset-x-0 p-4 flex items-center justify-between text-white translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">
+                <span class="text-sm font-medium" x-text="a.title"></span>
+                <span class="grid place-items-center h-9 w-9 rounded-full bg-brand-600">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" d="M21 21l-4.3-4.3M11 8v6M8 11h6M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                  </svg>
+                </span>
+              </div>
+            </button>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" class="py-20 lg:py-28 bg-ink-950 text-white blueprint">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-brand-400 font-semibold tracking-wide">কাজের ধাপ</p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">কিভাবে আমরা কাজ করি</h2>
+        </div>
+        <div class="mt-12 relative">
+          <div class="hidden lg:block absolute left-0 right-0 top-0 h-0.5 bg-white/10">
+            <div data-progress class="h-full bg-brand-500"></div>
+          </div>
+          <ol class="lg:pt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <template x-for="(st,i) in steps" :key="st.title">
+              <li data-reveal class="relative rounded-2xl border border-white/10 bg-white/5 p-6">
+                <span class="font-display text-5xl font-bold text-brand-600/70" x-text="i+1"></span>
+                <h3 class="mt-3 text-lg font-semibold" x-text="st.title"></h3>
+                <p class="mt-2 text-sm text-gray-400 leading-relaxed" x-text="st.desc"></p>
+              </li>
+            </template>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US + banner -->
+    <section id="about" class="py-20 lg:py-28">
+      <div class="mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-12 items-center">
+        <div data-reveal="left" class="rounded-3xl overflow-hidden shadow-xl ring-1 ring-gray-100">
+          <div class="overflow-hidden">
+            <img data-parallax="0.04" src="/assets/img/571740278_830205606637811_8511991240464855537_n.jpg"
+              alt="Adnan Architects & Engineers সেবা সমূহ" loading="lazy" class="w-full h-auto scale-110">
+          </div>
+        </div>
+        <div>
+          <div data-reveal>
+            <p class="text-brand-600 font-semibold tracking-wide">আমাদের সম্পর্কে</p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">কেন Adnan Architects &amp; Engineers?</h2>
+            <p class="mt-4 text-gray-600 leading-relaxed">
+              আমরা শুধু নকশা করি না — আপনার জমির সর্বোচ্চ ব্যবহার, নিরাপদ স্ট্রাকচার এবং দ্রুত অনুমোদন নিশ্চিত করি।
+            </p>
+          </div>
+          <ul class="mt-8 space-y-5">
+            <template x-for="w in why" :key="w.title">
+              <li data-reveal="left" class="flex gap-4">
+                <span class="mt-1 grid place-items-center h-6 w-6 shrink-0 rounded-full bg-brand-600 text-white">
+                  <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 class="font-semibold" x-text="w.title"></h3>
+                  <p class="text-sm text-gray-600" x-text="w.desc"></p>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+@endverbatim
+@if (\App\Support\Features::on('clients'))
+@include('partials.clients-section')
+@endif
+@verbatim
+    <!-- TESTIMONIALS: media on the left, details on the right -->
+    <section id="testimonials" class="py-20 lg:py-28 bg-ink-950 text-white blueprint">
+      <div class="mx-auto max-w-7xl px-4" x-data="{ cur: 0,
+          go(n) { this.cur = (n + testimonials.length) % testimonials.length; } }">
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-brand-400 font-semibold tracking-wide">ক্লায়েন্টদের কথা</p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold leading-[1.4]">যাঁরা আমাদের উপর ভরসা করেছেন</h2>
+        </div>
+
+        <div data-reveal class="mt-12 grid">
+          <template x-for="(c, n) in testimonials" :key="n">
+            <article class="col-start-1 row-start-1 grid lg:grid-cols-2 gap-8 lg:gap-14 items-center transition-opacity duration-700"
+              :class="n === cur ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'" :aria-hidden="n !== t" :inert="n !== t">
+
+              <!-- LEFT: image / video / (no media) quote panel -->
+              <div class="relative">
+                <span x-show="c.placeholder" class="absolute top-3 right-3 z-10 rounded-full bg-ink-950/80 text-white text-xs px-3 py-1">নমুনা</span>
+
+                <template x-if="c.type === 'image'">
+                  <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-gray-800 ring-1 ring-white/10 shadow-2xl">
+                    <img :src="c.image" :alt="c.name" loading="lazy" class="h-full w-full object-cover">
+                  </div>
+                </template>
+
+                <template x-if="c.type === 'video'">
+                  <button type="button" @click="openVideo(c.video)" :disabled="!c.video" aria-label="ভিডিও চালু করুন"
+                    class="group relative block w-full aspect-[4/3] overflow-hidden rounded-3xl bg-gray-800 ring-1 ring-white/10 shadow-2xl disabled:cursor-default">
+                    <div class="img-zoom h-full w-full"><img :src="c.poster" alt="" loading="lazy" class="h-full w-full object-cover"></div>
+                    <span class="absolute inset-0 bg-ink-950/30"></span>
+                    <span class="absolute inset-0 grid place-items-center">
+                      <span class="relative grid place-items-center h-20 w-20 rounded-full bg-brand-600 text-white shadow-xl shadow-brand-600/40 group-hover:scale-110 transition duration-300">
+                        <span x-show="c.video" class="absolute inset-0 rounded-full bg-brand-600 animate-ping opacity-40"></span>
+                        <svg class="relative h-8 w-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                      </span>
+                    </span>
+                    <span x-show="!c.video" class="absolute bottom-4 left-4 rounded-full bg-white/90 text-ink-800 px-4 py-1.5 text-sm font-medium">ভিডিও শীঘ্রই আসছে</span>
+                  </button>
+                </template>
+
+                <template x-if="c.type === 'text'">
+                  <div class="aspect-[4/3] grid place-items-center rounded-3xl bg-gradient-to-br from-brand-600 to-brand-400 shadow-2xl overflow-hidden relative">
+                    <img x-show="c.avatar" :src="c.avatar" alt="" class="absolute inset-0 h-full w-full object-cover">
+                    <span x-show="!c.avatar" class="font-display text-[10rem] leading-none text-white/30">&ldquo;</span>
+                  </div>
+                </template>
+              </div>
+
+              <!-- RIGHT: details -->
+              <div>
+                <span class="font-display text-7xl leading-none text-brand-600/70">&ldquo;</span>
+                <div class="-mt-3 flex gap-0.5 text-amber-400 text-xl" aria-label="রেটিং"><template x-for="s in (c.rating || 5)" :key="s"><span>★</span></template></div>
+                <blockquote class="mt-4 text-xl sm:text-2xl leading-[1.7] text-gray-100" x-text="c.text"></blockquote>
+                <div class="mt-7 flex items-center gap-4">
+                  <img x-show="c.avatar" :src="c.avatar" alt="" class="h-14 w-14 rounded-full object-cover ring-2 ring-brand-600">
+                  <span x-show="!c.avatar" class="grid place-items-center h-14 w-14 rounded-full bg-brand-600 text-white font-bold text-xl" x-text="c.name.charAt(0)"></span>
+                  <div>
+                    <p class="font-semibold text-lg leading-tight" x-text="c.name"></p>
+                    <p class="text-sm text-gray-400" x-text="c.role"></p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </template>
+        </div>
+
+        <!-- controls -->
+        <div class="mt-10 flex items-center gap-4">
+          <button type="button" @click="go(cur - 1)" aria-label="আগের"
+            class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-white hover:text-ink-950 transition">‹</button>
+          <button type="button" @click="go(cur + 1)" aria-label="পরের"
+            class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-white hover:text-ink-950 transition">›</button>
+          <div class="flex items-center gap-2 ml-2">
+            <template x-for="(c, n) in testimonials" :key="'td' + n">
+              <button type="button" @click="go(n)" :aria-label="t('মন্তব্য') + ' ' + (n + 1)" :aria-current="n === cur" class="flex items-center py-3">
+                <span class="block h-2 rounded-full transition-all duration-500" :class="n === cur ? 'w-12 bg-brand-500' : 'w-6 bg-white/25 hover:bg-white/50'"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS (slider) -->
+    <section id="insights" class="py-20 lg:py-28 bg-gray-50">
+      <div class="mx-auto max-w-7xl px-4" x-data="{
+          scrollBy(d) { const el = this.$refs.track; el.scrollBy({ left: d * (el.firstElementChild.offsetWidth + 24), behavior: 'smooth' }); }
+        }">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6" data-reveal>
+          <div class="max-w-2xl">
+            <p class="text-brand-600 font-semibold tracking-wide">ইনসাইট</p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">জানুন, বুঝুন, সিদ্ধান্ত নিন</h2>
+            <p class="mt-4 text-gray-600">প্ল্যান পাস, ডিজাইন ও নির্মাণ নিয়ে দরকারি কিছু লেখা।</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button type="button" @click="scrollBy(-1)" aria-label="আগের"
+              class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-ink-950 transition">‹</button>
+            <button type="button" @click="scrollBy(1)" aria-label="পরের"
+              class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-ink-950 transition">›</button>
+            <a href="/insights" class="ml-2 inline-flex items-center gap-2 rounded-full border border-gray-300 hover:border-brand-600 hover:text-brand-600 px-5 py-2.5 font-semibold transition">সব ইনসাইট দেখুন <span>→</span></a>
+          </div>
+        </div>
+
+        <div data-reveal x-ref="track"
+          class="mt-10 flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-pl-4 no-scrollbar pb-4 -mx-4 px-4">
+          <template x-for="a in insights" :key="a.slug">
+            <a :href="'/insight/' + a.slug"
+              class="group snap-start shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] rounded-2xl bg-white border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition duration-300">
+              <div class="img-zoom aspect-[16/10] overflow-hidden bg-gray-100">
+                <img :src="a.cover" :alt="a.title" loading="lazy" class="h-full w-full"
+                  :class="a.coverFit === 'contain' ? 'object-contain p-2 bg-white' : 'object-cover'">
+              </div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 text-xs text-gray-500">
+                  <span class="rounded-full bg-brand-50 text-brand-700 font-medium px-3 py-1" x-text="a.category"></span>
+                  <span x-text="a.readTime + ' ' + t('পড়া')"></span>
+                </div>
+                <h3 class="mt-4 text-lg font-semibold leading-snug line-clamp-2 group-hover:text-brand-600 transition" x-text="a.title"></h3>
+                <p class="mt-2 text-sm text-gray-600 leading-relaxed line-clamp-3" x-text="a.excerpt"></p>
+                <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 group-hover:gap-3 transition-all">পড়ুন <span>→</span></span>
+              </div>
+            </a>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-20 lg:py-28">
+      <div class="mx-auto max-w-3xl px-4">
+        <h2 data-split class="text-3xl font-bold text-center">সাধারণ জিজ্ঞাসা</h2>
+        <div data-reveal="scale" class="mt-10 divide-y divide-gray-200 border-y border-gray-200" x-data="{open:0}">
+          <template x-for="(f,i) in faqs" :key="f.q">
+            <div>
+              <button class="w-full flex items-center justify-between gap-4 py-5 text-left font-semibold"
+                @click="open = open===i ? null : i" :aria-expanded="open===i">
+                <span x-text="f.q"></span>
+                <svg class="h-5 w-5 shrink-0 text-brand-600 transition duration-300" :class="open===i && 'rotate-45'"
+                  fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div x-show="open===i" x-collapse x-cloak class="pb-5 text-gray-600 leading-relaxed" x-text="f.a"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact"
+      class="py-20 lg:py-28 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-400 text-white relative overflow-hidden">
+      <div class="absolute inset-0 blueprint opacity-40"></div>
+      <div class="relative mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-12">
+        <div>
+          <div data-reveal>
+            <h2 data-split class="text-3xl sm:text-4xl font-bold leading-tight">আপনার প্রজেক্ট নিয়ে কথা বলুন</h2>
+            <p class="mt-4 text-white/90 max-w-md">ফর্মটি পূরণ করুন অথবা সরাসরি কল করুন। আমরা দ্রুত যোগাযোগ করব।</p>
+          </div>
+          <div class="mt-8 space-y-4">
+            <a data-reveal="left" href="tel:01673092580"
+              class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
+              <span class="text-2xl">📞</span>
+              <span><span class="block text-sm text-white/80">কল করুন</span><span
+                  class="block text-xl font-bold font-display">01673092580</span></span>
+            </a>
+            <a data-reveal="left" href="mailto:anik.p.h7@gmail.com"
+              class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
+              <span class="text-2xl">✉️</span>
+              <span><span class="block text-sm text-white/80">ইমেইল</span><span
+                  class="block font-semibold break-all">anik.p.h7@gmail.com</span></span>
+            </a>
+            <div data-reveal="left" class="flex items-center gap-4 rounded-2xl bg-white/15 backdrop-blur px-5 py-4">
+              <span class="text-2xl">📍</span>
+              <span><span class="block text-sm text-white/80">অফিস</span><span class="block font-semibold">২৯৩, কে.কে টাওয়ার
+                  (গ্রাউন্ড ফ্লোর), বন্দর, নারায়ণগঞ্জ-১৪১০</span></span>
+            </div>
+            <a data-reveal="left" href="https://www.facebook.com/adnanarchitectsandengineers/" target="_blank" rel="noopener"
+              class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
+              <span class="text-2xl">💬</span>
+              <span><span class="block text-sm text-white/80">Facebook পেজ</span><span
+                  class="block font-semibold">adnanarchitectsandengineers</span></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Frontend-only form: backend (Laravel) will be connected later -->
+        <form data-reveal="right" class="rounded-3xl bg-white text-ink-800 p-6 sm:p-8 shadow-2xl self-start"
+          @submit.prevent="submitForm()">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <label class="block"><span class="text-sm font-medium">আপনার নাম</span>
+              <input required x-model="form.name" type="text"
+                class="mt-1 w-full rounded-xl border-gray-200 border px-4 py-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 outline-none"></label>
+            <label class="block"><span class="text-sm font-medium">মোবাইল নম্বর</span>
+              <input required x-model="form.phone" type="tel"
+                class="mt-1 w-full rounded-xl border-gray-200 border px-4 py-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 outline-none"></label>
+          </div>
+          <label class="block mt-4"><span class="text-sm font-medium">কোন সেবা প্রয়োজন?</span>
+            <select x-model="form.service"
+              class="mt-1 w-full rounded-xl border-gray-200 border px-4 py-3 bg-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 outline-none">
+              <option value="">নির্বাচন করুন</option>
+              <template x-for="s in services" :key="s.title">
+                <option x-text="s.title"></option>
+              </template>
+            </select></label>
+          <label class="block mt-4"><span class="text-sm font-medium">বার্তা</span>
+            <textarea rows="4" x-model="form.message"
+              class="mt-1 w-full rounded-xl border-gray-200 border px-4 py-3 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 outline-none"
+              placeholder="জমির আকার, অবস্থান ও প্রয়োজন সংক্ষেপে লিখুন"></textarea></label>
+          <button :disabled="sending"
+            class="mt-6 w-full rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-semibold py-3.5 transition">বার্তা পাঠান</button>
+          <p x-show="sent" x-cloak x-transition class="mt-4 text-center text-sm text-green-600 font-medium">✔ ধন্যবাদ!
+            আমরা শীঘ্রই যোগাযোগ করব।</p>
+          <p x-show="error" x-cloak x-text="error" class="mt-4 text-center text-sm text-red-600 font-medium"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Video player (intro + testimonials). Needs internet for YouTube/Facebook; local .mp4 files work offline. -->
+  <div x-show="vid.open" x-cloak x-transition.opacity.duration.250ms data-lenis-prevent
+    class="fixed inset-0 z-[95] bg-black/90 flex flex-col items-center justify-center p-4" role="dialog" aria-modal="true"
+    @click.self="closeVideo()">
+    <button @click="closeVideo()" class="absolute top-3 right-4 text-4xl leading-none text-white px-2" aria-label="বন্ধ করুন">&times;</button>
+    <div class="w-full max-w-5xl aspect-video rounded-xl overflow-hidden bg-black shadow-2xl">
+      <template x-if="vid.open && vid.kind === 'iframe'">
+        <iframe :src="vid.src" class="h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+          title="ভিডিও"></iframe>
+      </template>
+      <template x-if="vid.open && vid.kind === 'file'">
+        <video :src="vid.src" class="h-full w-full" controls autoplay playsinline></video>
+      </template>
+    </div>
+  </div>
+
+  <!-- Activities lightbox -->
+  <div x-show="lb.open" x-cloak x-transition.opacity.duration.250ms data-lenis-prevent
+    @keydown.window="onKey($event)"
+    class="fixed inset-0 z-[90] bg-black/90 flex flex-col" role="dialog" aria-modal="true" @click.self="closeLb()">
+    <div class="flex items-center justify-between px-4 py-3 text-white">
+      <span class="text-sm text-gray-300"
+        x-text="num(lb.i+1) + ' / ' + num(activities.length)"></span>
+      <button @click="closeLb()" class="text-3xl leading-none px-2" aria-label="বন্ধ করুন">&times;</button>
+    </div>
+    <div class="relative flex-1 min-h-0 flex items-center justify-center px-4 sm:px-16" @click.self="closeLb()">
+      <button @click="prev()"
+        class="absolute left-2 sm:left-5 z-10 grid place-items-center h-11 w-11 rounded-full bg-white/10 hover:bg-brand-600 text-white transition"
+        aria-label="আগের ছবি">‹</button>
+      <img x-ref="lbimg" :src="activities[lb.i].src" :alt="activities[lb.i].title"
+        class="max-h-full max-w-full object-contain rounded-lg">
+      <button @click="next()"
+        class="absolute right-2 sm:right-5 z-10 grid place-items-center h-11 w-11 rounded-full bg-white/10 hover:bg-brand-600 text-white transition"
+        aria-label="পরের ছবি">›</button>
+    </div>
+    <div class="px-4 py-4 text-center text-white">
+      <p class="font-semibold" x-text="activities[lb.i].title"></p>
+      <p class="text-sm text-gray-300" x-text="activities[lb.i].note || ''"></p>
+    </div>
+  </div>
+@endverbatim
+@endsection
+
+@push('scripts')
+@verbatim
+<script>
+    function heroSlider() {
+      const TICK = 60;
+      const cfg = Object.assign({ autoplay: true, interval: 6000, pauseOnHover: true }, window.HERO_CONFIG);
+      return {
+        slides: window.HERO_SLIDES,
+        i: 0, progress: 0, paused: false, touchX: 0,
+        init() {
+          const respect = !(window.SITE && window.SITE.respectReducedMotion === false);
+          if (!cfg.autoplay || (respect && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+          this.$watch('paused', (v) => { if (v && !cfg.pauseOnHover) this.paused = false; });
+          setInterval(() => {
+            if (this.paused || document.hidden) return;
+            this.progress += 100 * TICK / cfg.interval;
+            if (this.progress >= 100) this.next();
+          }, TICK);
+        },
+        go(n) { this.i = (n + this.slides.length) % this.slides.length; this.progress = 0; },
+        next() { this.go(this.i + 1); },
+        prev() { this.go(this.i - 1); },
+        swipe(x) {
+          const d = x - this.touchX;
+          if (Math.abs(d) > 50) d < 0 ? this.next() : this.prev();
+        },
+      };
+    }
+
+    function site() {
+      const icon = {
+        soil: '<path d="M3 20h18M5 20l2-6h10l2 6M9 14V8l3-4 3 4v6"/>',
+        arch: '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
+        struct: '<path d="M4 20V10l8-6 8 6v10M4 14h16M9 20v-6M15 20v-6"/>',
+        elec: '<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/>',
+        fire: '<path d="M12 3c1 3 5 5 5 10a5 5 0 01-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-6 1-9z"/>',
+        design: '<path d="M4 20l4-1L19 8a2.1 2.1 0 00-3-3L5 16l-1 4zM14 7l3 3"/>',
+        cube: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
+        rajuk: '<path d="M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"/>',
+        city: '<path d="M4 21V7l6-3v17M10 21V11l10 3v7M7 10h0M7 14h0M14 16h0M17 17h0"/>',
+      };
+      return {
+        sent: false, sending: false, error: '',
+        form: { name: '', phone: '', service: '', message: '' },
+        projects: window.PROJECTS,
+        activities: window.ACTIVITIES,
+        insights: window.INSIGHTS,
+        intro: window.INTRO,
+        testimonials: window.TESTIMONIALS,
+        clients: window.CLIENTS || [],
+        clientsHead: window.CLIENTS_SECTION || {},
+        vid: { open: false, kind: '', src: '' },
+        get hasIntroVideo() { return !!window.parseVideo(this.intro.video); },
+        openVideo(url) {
+          const v = window.parseVideo(url);
+          if (!v) return;
+          this.vid = { open: true, ...v };
+        },
+        closeVideo() { this.vid = { open: false, kind: '', src: '' }; },
+        lb: { open: false, i: 0 },
+        init() {
+          this.$watch('lb.open', (v) => { window.__lenis && (v ? window.__lenis.stop() : window.__lenis.start()); });
+          this.$watch('vid.open', (v) => { window.__lenis && (v ? window.__lenis.stop() : window.__lenis.start()); });
+          window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.vid.open) this.closeVideo(); });
+          this.$watch('lb.i', () => this.$nextTick(() => {
+            if (window.gsap && this.$refs.lbimg) gsap.fromTo(this.$refs.lbimg, { opacity: 0, scale: .96 }, { opacity: 1, scale: 1, duration: .4, ease: 'power3.out' });
+          }));
+        },
+        openLb(i) { this.lb.i = i; this.lb.open = true; },
+        closeLb() { this.lb.open = false; },
+        next() { this.lb.i = (this.lb.i + 1) % this.activities.length; },
+        prev() { this.lb.i = (this.lb.i - 1 + this.activities.length) % this.activities.length; },
+        onKey(e) {
+          if (!this.lb.open) return;
+          if (e.key === 'Escape') this.closeLb();
+          if (e.key === 'ArrowRight') this.next();
+          if (e.key === 'ArrowLeft') this.prev();
+        },
+
+        stats: window.STATS,
+        services: window.SERVICES.map(s => ({ ...s, icon: icon[s.icon] })),
+        steps: window.STEPS,
+        why: window.WHY,
+        faqs: window.FAQS,
+
+        async submitForm() {
+          this.sending = true; this.error = '';
+          try {
+            const res = await fetch('/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content },
+              body: JSON.stringify(this.form),
+            });
+            if (res.ok) {
+              this.sent = true;
+              this.form = { name: '', phone: '', service: '', message: '' };
+              setTimeout(() => this.sent = false, 5000);
+            } else {
+              this.error = t('পাঠানো যায়নি, অনুগ্রহ করে আবার চেষ্টা করুন।');
+            }
+          } catch (e) {
+            this.error = t('পাঠানো যায়নি, অনুগ্রহ করে আবার চেষ্টা করুন।');
+          } finally {
+            this.sending = false;
+          }
+        },
+      };
+    }
+  </script>
+@endverbatim
+@endpush
