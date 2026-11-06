@@ -135,6 +135,11 @@
                     <div><span class="text-[11px] text-gray-400">{{ $sub['label'] }} (English)</span>
                       <input type="text" :name="'{{ $name }}[' + row._id + '][{{ $sub['key'] }}][en]'" x-model="row.{{ $sub['key'] }}.en" class="{{ $inputClass }}"></div>
                   </div>
+                @elseif ($sub['type'] === 'select')
+                  <div><span class="text-[11px] text-gray-400">{{ $sub['label'] }}</span>
+                    <select :name="'{{ $name }}[' + row._id + '][{{ $sub['key'] }}]'" x-model="row.{{ $sub['key'] }}" class="{{ $inputClass }}">
+                      @foreach ($sub['options'] as $ov => $ol)<option value="{{ $ov }}">{{ $ol }}</option>@endforeach
+                    </select></div>
                 @else
                   <div><span class="text-[11px] text-gray-400">{{ $sub['label'] }}</span>
                     <input type="{{ $sub['type'] === 'number' ? 'number' : 'text' }}" :name="'{{ $name }}[' + row._id + '][{{ $sub['key'] }}]'" x-model="row.{{ $sub['key'] }}" class="{{ $inputClass }}"></div>
@@ -144,7 +149,7 @@
             <button type="button" @click="rows.splice(i, 1)" class="mt-2 text-xs font-semibold text-red-600 hover:underline">Remove row</button>
           </div>
         </template>
-        <button type="button" @click="rows.push({ _id: ++uid, @foreach ($f['sub'] as $sub) {{ $sub['key'] }}: {{ $sub['type'] === 'bi_text' ? "{ bn: '', en: '' }" : "''" }}, @endforeach })"
+        <button type="button" @click="rows.push({ _id: ++uid, @foreach ($f['sub'] as $sub) {{ $sub['key'] }}: {{ $sub['type'] === 'bi_text' ? "{ bn: '', en: '' }" : ($sub['type'] === 'select' ? "'".array_key_first($sub['options'])."'" : "''") }}, @endforeach })"
           class="rounded-lg border border-dashed border-gray-300 px-4 py-2 text-sm font-semibold text-gray-600 hover:border-brand-600 hover:text-brand-600">+ Add row</button>
       </div>
       @break

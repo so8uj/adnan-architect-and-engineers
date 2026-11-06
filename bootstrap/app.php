@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // "lang" is written by JavaScript, so it is not an encrypted cookie
         $middleware->encryptCookies(except: ['lang']);
         $middleware->web(append: [SetLocale::class, SecurityHeaders::class]);
+        $middleware->alias(['perm' => \App\Http\Middleware\RequirePermission::class, 'feature' => \App\Http\Middleware\FeatureOn::class]);
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {

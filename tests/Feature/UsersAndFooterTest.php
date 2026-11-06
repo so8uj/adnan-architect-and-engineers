@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Setting;
+use App\Models\Role;
 use App\Models\User;
 use App\Support\SiteData;
 use Database\Seeders\SiteSeeder;
@@ -23,6 +24,7 @@ class UsersAndFooterTest extends TestCase
         $this->seed(SiteSeeder::class);
         $this->developer = User::where('email', 'developer@sobuj.com')->firstOrFail();
         $this->client = User::create(['name' => 'Client Admin', 'email' => 'client@adnan.test', 'password' => 'password123']);
+        $this->client->forceFill(['role_id' => Role::superAdmin()->id])->save();   // a Super Admin, like every admin before roles existed
     }
 
     public function test_the_developer_account_exists_and_cannot_be_made_by_mass_assignment(): void
@@ -128,7 +130,7 @@ class UsersAndFooterTest extends TestCase
         $site = SiteData::payload('en')['SITE'];
         $this->assertTrue($site['credit']['show']);
         $this->assertSame('Sobuj', $site['credit']['name']);
-        $this->assertSame('Design & Developed by', $site['credit']['text']);
+        $this->assertSame('Designed & Developed by', $site['credit']['text']);
         $this->assertSame('https://www.facebook.com/so8uj', $site['credit']['url']);
         $this->assertSame('সবুজ', SiteData::payload('bn')['SITE']['credit']['name']);
     }
@@ -171,6 +173,6 @@ class UsersAndFooterTest extends TestCase
     public function test_sidebar_lists_header_footer_and_users(): void
     {
         $this->actingAs($this->client)->get('/admin')->assertOk()
-            ->assertSee('Header &amp; Footer', false)->assertSee('User management')->assertSee('My profile');
+            ->assertSee('Website Management')->assertSee('Footer')->assertSee('User management')->assertSee('My profile');
     }
 }

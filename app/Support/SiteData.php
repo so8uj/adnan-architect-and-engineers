@@ -37,6 +37,93 @@ class SiteData
         Cache::forget('settings.all');
     }
 
+    /** Default section headings [bn, en] — used until the owner saves them (Admin -> Home Page -> Section headings). */
+    public const SECTION_DEFAULTS = [
+        'services' => ['eyebrow' => ['আমাদের সেবাসমূহ', 'Our Services'], 'title' => ['ভবন নির্মাণের প্রতিটি ধাপে আপনার পাশে', 'By your side at every step of construction'], 'text' => ['অভিজ্ঞ আর্কিটেক্ট ও ইঞ্জিনিয়ার টিমের মাধ্যমে প্রয়োজনীয় সব ড্রয়িং, ডিজাইন ও অনুমোদন সেবা।', 'All the drawings, designs and approval services you need, from an experienced team of architects and engineers.']],
+        'portfolio' => ['eyebrow' => ['আমাদের কাজ', 'Our Work'], 'title' => ['সম্পন্ন প্রজেক্টের নমুনা', 'Samples of completed projects'], 'text' => ['যেকোনো প্রজেক্টে ক্লিক করে সব ড্রয়িং ও বিস্তারিত বিবরণ দেখুন।', 'Click any project to see all drawings and full details.'], 'btn_label' => ['সব প্রজেক্ট দেখুন', 'View all projects'], 'btn_url' => '/portfolio'],
+        'activities' => ['eyebrow' => ['গ্যালারি', 'Gallery'], 'title' => ['আমাদের কার্যক্রম', 'Our Activities'], 'text' => ['সাইট পরিদর্শন ও কাজের তদারকির নিয়মিত কিছু মুহূর্ত। ছবিতে ক্লিক করে বড় করে দেখুন।', 'Regular moments from site visits and work supervision. Click a photo to enlarge it.']],
+        'process' => ['eyebrow' => ['কাজের ধাপ', 'Process'], 'title' => ['কীভাবে আমরা কাজ করি', 'How we work'], 'text' => ['', '']],
+        'about' => ['eyebrow' => ['আমাদের সম্পর্কে', 'About Us'], 'title' => ['কেন Adnan Architects & Engineers?', 'Why Adnan Architects & Engineers?'], 'text' => ['আমরা শুধু নকশা করি না — আপনার জমির সর্বোচ্চ ব্যবহার, নিরাপদ স্ট্রাকচার এবং দ্রুত অনুমোদন নিশ্চিত করি।', 'We do more than design — we ensure the best use of your land, a safe structure and fast approval.']],
+        'testimonials' => ['eyebrow' => ['ক্লায়েন্টদের কথা', 'Client Voices'], 'title' => ['যাঁরা আমাদের ওপর ভরসা করেছেন', 'People who have trusted us'], 'text' => ['', '']],
+        'insights' => ['eyebrow' => ['ইনসাইট', 'Insights'], 'title' => ['জানুন, বুঝুন, সিদ্ধান্ত নিন', 'Learn, understand, decide'], 'text' => ['প্ল্যান পাস, ডিজাইন ও নির্মাণ নিয়ে দরকারি কিছু লেখা।', 'Some useful reads on plan approval, design and construction.'], 'btn_label' => ['সব ইনসাইট দেখুন', 'View all insights'], 'btn_url' => '/insights'],
+        'faq' => ['eyebrow' => ['', ''], 'title' => ['সাধারণ জিজ্ঞাসা', 'Frequently Asked Questions'], 'text' => ['', '']],
+        'contact' => ['eyebrow' => ['', ''], 'title' => ['আপনার প্রজেক্ট নিয়ে কথা বলুন', 'Talk to us about your project'], 'text' => ['ফর্মটি পূরণ করুন অথবা সরাসরি কল করুন। আমরা দ্রুত যোগাযোগ করব।', 'Fill in the form or call us directly. We will get back to you quickly.']],
+    ];
+
+    /** The same defaults as flat settings keys (sec_<section>_<field>), for the seeder and for the admin form. */
+    public static function sectionSettingDefaults(): array
+    {
+        $out = [];
+        foreach (self::SECTION_DEFAULTS as $id => $f) {
+            foreach ($f as $k => $v) {
+                $out["sec_{$id}_{$k}"] = is_array($v) ? ['bn' => $v[0], 'en' => $v[1]] : $v;
+            }
+            if (isset($f['btn_label'])) {
+                $out["sec_{$id}_btn_show"] = true;
+            }
+        }
+
+        return $out;
+    }
+
+    /** Section headings for the home page, in the visitor's language. */
+    private static function sections(string $l): array
+    {
+        $pick = fn ($v) => is_array($v) ? (string) static::pick($v, $l) : (string) $v;
+        $out = [];
+        foreach (self::SECTION_DEFAULTS as $id => $f) {
+            $row = [];
+            foreach (['eyebrow', 'title', 'text'] as $k) {
+                $row[$k] = $pick(Setting::get("sec_{$id}_{$k}", ['bn' => $f[$k][0], 'en' => $f[$k][1]]));
+            }
+            if (isset($f['btn_label'])) {
+                $row['btn'] = [
+                    'show' => (bool) Setting::get("sec_{$id}_btn_show", true),
+                    'label' => $pick(Setting::get("sec_{$id}_btn_label", ['bn' => $f['btn_label'][0], 'en' => $f['btn_label'][1]])),
+                    'url' => (string) Setting::get("sec_{$id}_btn_url", $f['btn_url']),
+                ];
+            }
+            $out[$id] = $row;
+        }
+
+        return $out;
+    }
+
+    /** Our Work main categories [label, page heading, page paragraph] as [bn, en]. Edited in Admin -> Home Page -> Section headings. */
+    public const WORK_DEFAULTS = [
+        'completed' => ['label' => ['সম্পন্ন প্রজেক্ট', 'Completed Projects'], 'title' => ['আমাদের সম্পন্ন প্রজেক্ট', 'Our Completed Projects'], 'text' => ['যেসব প্রজেক্ট আমরা সফলভাবে সম্পন্ন করেছি — যেকোনোটিতে ক্লিক করে সব ছবি ও বিস্তারিত দেখুন।', 'Projects we have completed successfully — click any project to see all photos and details.']],
+        'running' => ['label' => ['চলমান প্রজেক্ট', 'Running Projects'], 'title' => ['আমাদের চলমান প্রজেক্ট', 'Our Running Projects'], 'text' => ['যেসব প্রজেক্টের কাজ এখন চলছে — অগ্রগতিসহ দেখুন।', 'Projects whose work is in progress right now — see how far each one has come.']],
+    ];
+
+    /** Flat settings (work_<status>_<field>) with their defaults, for the seeder and the admin form. */
+    public static function workSettingDefaults(): array
+    {
+        $out = [];
+        foreach (self::WORK_DEFAULTS as $st => $f) {
+            foreach ($f as $k => $v) {
+                $out["work_{$st}_{$k}"] = ['bn' => $v[0], 'en' => $v[1]];
+            }
+        }
+
+        return $out;
+    }
+
+    /** The two Our Work main categories (completed / running) with their labels, page texts, link and project count. */
+    public static function work(string $l): array
+    {
+        $out = [];
+        foreach (self::WORK_DEFAULTS as $st => $f) {
+            $row = ['status' => $st, 'url' => '/portfolio/'.$st, 'count' => Project::where('active', true)->where('status', $st)->count()];
+            foreach ($f as $k => $v) {
+                $val = Setting::get("work_{$st}_{$k}", ['bn' => $v[0], 'en' => $v[1]]);
+                $row[$k] = is_array($val) ? (string) static::pick($val, $l) : (string) $val;
+            }
+            $out[$st] = $row;
+        }
+
+        return $out;
+    }
+
     public static function url(?string $path): ?string
     {
         if (! $path) {
@@ -44,6 +131,21 @@ class SiteData
         }
 
         return preg_match('#^(https?:)?//#', $path) ? $path : '/'.ltrim($path, '/');
+    }
+
+    /**
+     * The Google Maps embed address for the full-screen map above the footer (Admin -> General & Contact -> Map).
+     * The admin may paste the whole <iframe ...> code or just the src address; only https://www.google.com/maps/embed
+     * addresses are accepted, so nothing else can be framed into the page. Empty / invalid = no map section.
+     */
+    public static function mapSrc(): ?string
+    {
+        $v = trim((string) Setting::get('map_embed', ''));
+        if (preg_match('/src\s*=\s*["\']([^"\']+)["\']/i', $v, $m)) {
+            $v = html_entity_decode($m[1]);
+        }
+
+        return preg_match('#^https://www\.google\.com/maps/embed\?#', $v) ? $v : null;
     }
 
     public static function digits(string $s, string $locale): string
@@ -78,7 +180,7 @@ class SiteData
                 // the credit can not be switched off: empty values fall back to the built-in ones
                 'credit' => [
                     'show' => true,
-                    'text' => $S('credit_text') ?: ($l === 'en' ? 'Design & Developed by' : 'ডিজাইন ও ডেভেলপ করেছেন'),
+                    'text' => $S('credit_text') ?: ($l === 'en' ? 'Designed & Developed by' : 'ডিজাইন ও ডেভেলপ করেছেন'),
                     'name' => $S('credit_name') ?: ($l === 'en' ? 'Sobuj' : 'সবুজ'),
                     'url' => Setting::get('credit_url') ?: 'https://www.facebook.com/so8uj',
                 ],
@@ -87,6 +189,7 @@ class SiteData
                     'ctaShow' => (bool) Setting::get('header_cta_show', true),
                     'ctaLabel' => $S('header_cta_label'),
                     'ctaUrl' => Setting::get('header_cta_url', '/#contact'),
+                    'workDropdown' => (bool) Setting::get('header_work_dropdown', true),
                     'showLang' => (bool) Setting::get('header_show_lang', true),
                     'showTheme' => (bool) Setting::get('header_show_theme', true),
                     'menu' => array_values(array_filter(array_map(fn ($m) => [
@@ -105,6 +208,12 @@ class SiteData
                 ],
             ],
             'HERO_CONFIG' => [
+                'style' => Setting::get('hero_style', 'v2') === 'v1' ? 'v1' : 'v2',
+                'marquee' => (bool) Setting::get('hero_marquee', true),
+                'columns' => max(2, min(8, (int) Setting::get('hero_columns', 4))),
+                'overlay' => max(0, min(90, (int) Setting::get('hero_overlay', 45))),
+                'arrows' => (bool) Setting::get('hero_arrows', true),
+                'dots' => (bool) Setting::get('hero_dots', true),
                 'autoplay' => (bool) Setting::get('hero_autoplay', true),
                 'interval' => (int) Setting::get('hero_interval', 6000),
                 'pauseOnHover' => (bool) Setting::get('hero_pause_on_hover', true),
@@ -115,10 +224,9 @@ class SiteData
                 'cta' => ['label' => $t($s, 'cta_label'), 'href' => $s->cta_url],
                 'chip' => ['icon' => $s->chip_icon, 'title' => $t($s, 'chip_title'), 'sub' => $t($s, 'chip_sub')],
             ])->all(),
-            'STATS' => array_map(fn ($s) => [
-                'value' => (int) ($s['value'] ?? 0), 'suffix' => $s['suffix'] ?? '',
-                'label' => is_array($s['label'] ?? null) ? (($s['label'][$l] ?? '') ?: ($s['label']['bn'] ?? '')) : ($s['label'] ?? ''),
-            ], (array) Setting::get('stats', [])),
+            'AROUND' => static::around($l),
+            'SECTIONS' => static::sections($l),
+            'WORK' => static::work($l),
             'SERVICES' => $list(Service::class)->map(fn ($m) => ['title' => $t($m, 'title'), 'icon' => $m->icon, 'desc' => $t($m, 'description')])->all(),
             'STEPS' => $list(ProcessStep::class)->map(fn ($m) => ['title' => $t($m, 'title'), 'desc' => $t($m, 'description')])->all(),
             'WHY' => $list(WhyItem::class)->map(fn ($m) => ['title' => $t($m, 'title'), 'desc' => $t($m, 'description')])->all(),
@@ -130,10 +238,7 @@ class SiteData
             'CLIENTS' => Features::on('clients') ? static::clients($l) : [],
             'CLIENTS_SECTION' => Features::on('clients') ? ['title' => $S('clients_title'), 'subtitle' => $S('clients_subtitle')] : null,
             'INTRO' => [
-                'eyebrow' => $S('intro_eyebrow'), 'title' => $S('intro_title'),
                 'video' => Setting::get('intro_video', ''), 'poster' => static::url(Setting::get('intro_poster')),
-                'paragraphs' => (array) $S('intro_paragraphs', []), 'points' => (array) $S('intro_points', []),
-                'person' => ['name' => $S('intro_person_name'), 'role' => $S('intro_person_role')],
             ],
             'TESTIMONIALS' => $list(Testimonial::class)->map(fn ($m) => [
                 'type' => $m->type, 'name' => $t($m, 'name'), 'role' => $t($m, 'role'), 'text' => $t($m, 'text'), 'rating' => $m->rating,
@@ -160,10 +265,39 @@ class SiteData
         return ($x === null || $x === '' || $x === []) ? ($v['bn'] ?? null) : $x;
     }
 
+    /**
+     * The plain texts shown around the intro video (Admin -> Settings -> Home sections -> "Texts around the intro video").
+     * One item per position (top / left / right / bottom); a number is optional (it counts up). Not saved yet = no texts.
+     */
+    private static function around(string $l): array
+    {
+        $rows = Setting::get('around_items');
+        if (! is_array($rows)) {
+            $rows = [];
+        }
+
+        $byPos = [];
+        foreach ($rows as $r) {
+            $pos = $r['pos'] ?? '';
+            if (! in_array($pos, ['top', 'left', 'right', 'bottom'], true) || isset($byPos[$pos])) {
+                continue;
+            }
+            $text = is_array($r['text'] ?? null) ? (string) static::pick($r['text'], $l) : (string) ($r['text'] ?? '');
+            $has = isset($r['value']) && $r['value'] !== '' && $r['value'] !== null;
+            if ($text === '' && ! $has) {
+                continue;
+            }
+            $byPos[$pos] = ['pos' => $pos, 'value' => $has ? (int) $r['value'] : null, 'suffix' => (string) ($r['suffix'] ?? ''), 'text' => $text];
+        }
+
+        return array_values(array_filter(array_map(fn ($p) => $byPos[$p] ?? null, ['top', 'left', 'right', 'bottom'])));
+    }
+
     public static function project(Project $p, string $l): array
     {
         return [
             'slug' => $p->slug,
+            'status' => $p->status === 'running' ? 'running' : 'completed', 'progress' => $p->progress,
             'title' => $p->tr('title', $l), 'category' => $p->tr('category', $l), 'tagline' => $p->tr('tagline', $l), 'summary' => $p->tr('summary', $l),
             'cover' => static::url($p->cover), 'coverPos' => $p->cover_pos ?: 'center',
             'meta' => (array) static::pick($p->meta, $l),

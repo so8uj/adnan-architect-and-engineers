@@ -11,13 +11,15 @@
 <div class="overflow-x-auto rounded-xl bg-white shadow-sm ring-1 ring-gray-100">
   <table class="min-w-full text-sm">
     <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">
-      <tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Created</th><th class="px-4 py-3 text-right">Actions</th></tr>
+      <tr><th class="px-4 py-3">Name</th><th class="px-4 py-3">Email</th><th class="px-4 py-3">Department</th><th class="px-4 py-3">Role</th><th class="px-4 py-3">Created</th><th class="px-4 py-3 text-right">Actions</th></tr>
     </thead>
     <tbody class="divide-y divide-gray-100">
       @foreach ($users as $u)
         <tr class="hover:bg-gray-50">
           <td class="px-4 py-3 font-semibold">{{ $u->name }} @if ($u->id === auth()->id())<span class="ml-1 rounded bg-gray-200 px-1.5 text-[10px] font-semibold text-gray-600">YOU</span>@endif</td>
           <td class="px-4 py-3">{{ $u->email }}</td>
+          <td class="px-4 py-3">{{ $u->department?->name ?? '—' }}</td>
+          <td class="px-4 py-3">{{ $u->role?->name ?? 'No role' }}@if (! $u->attendance_required) <span class="ml-1 rounded bg-gray-100 px-1.5 text-[10px] text-gray-500">no attendance</span>@endif</td>
           <td class="px-4 py-3 text-gray-500">{{ $u->created_at?->format('d M Y') }}</td>
           <td class="whitespace-nowrap px-4 py-3 text-right">
             <a href="{{ route('admin.users.edit', $u->id) }}" class="mr-3 font-semibold text-brand-600 hover:underline">Edit</a>

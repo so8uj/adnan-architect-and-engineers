@@ -5,12 +5,35 @@
 @section('content')
 @verbatim
 <main>
-    <!-- HERO SLIDER (white tone) -->
-    <section id="home" data-hero x-data="heroSlider()" class="relative overflow-hidden bg-white text-ink-800 blueprint-light"
-      @mouseenter="paused = true" @mouseleave="paused = false" @touchstart.passive="touchX = $event.touches[0].clientX"
+    <!-- HERO SLIDER v1: full-page Sobuj slider (admin -> Animation -> Hero slider style) -->
+    <template x-if="window.HERO_CONFIG.style === 'v1'">
+      <section id="home" data-hero x-data="sobujHero()" class="relative">
+        <div id="sobuj-hero" style="height:100svh;min-height:560px"></div>
+      </section>
+    </template>
+
+    <!-- HERO SLIDER v2 (white tone) -->
+    <template x-if="window.HERO_CONFIG.style !== 'v1'">
+    <section id="home" data-hero x-data="heroSlider()" class="hero-v2 relative overflow-hidden bg-white text-ink-800 blueprint-light"
+      @mouseenter="paused = true" @mouseleave="paused = false" @pointermove="tilt($event)" @touchstart.passive="touchX = $event.touches[0].clientX"
       @touchend.passive="swipe($event.changedTouches[0].clientX)">
       <div data-blob class="absolute -top-40 -right-40 h-[32rem] w-[32rem] rounded-full bg-brand-100/70 blur-3xl"></div>
       <div data-blob class="absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-brand-50 blur-3xl"></div>
+
+      <!-- engineering decoration (pure CSS/SVG, animated) -->
+      <div class="hero-eng" aria-hidden="true">
+        <svg class="eng-gear eng-gear-a" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="86" stroke-width="16" stroke-dasharray="11.25 11.25"/><circle cx="100" cy="100" r="76" stroke-width="8"/><circle cx="100" cy="100" r="26" stroke-width="6"/><path stroke-width="5" d="M100 74V30M100 126v44M74 100H30M126 100h44M81.6 81.6L50 50M118.4 118.4L150 150M118.4 81.6L150 50M81.6 118.4L50 150"/></svg>
+        <svg class="eng-gear eng-gear-b" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="86" stroke-width="16" stroke-dasharray="11.25 11.25"/><circle cx="100" cy="100" r="76" stroke-width="8"/><circle cx="100" cy="100" r="30" stroke-width="8"/></svg>
+        <svg class="eng-gear eng-gear-c" viewBox="0 0 200 200" fill="none" stroke="currentColor"><circle cx="100" cy="100" r="86" stroke-width="16" stroke-dasharray="11.25 11.25"/><circle cx="100" cy="100" r="76" stroke-width="8"/><circle cx="100" cy="100" r="26" stroke-width="6"/><path stroke-width="5" d="M100 74V30M100 126v44M74 100H30M126 100h44"/></svg>
+        <svg class="eng-compass" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="60" cy="60" r="54" stroke-dasharray="3 5"/><circle cx="60" cy="60" r="38"/><path d="M60 6v14M60 100v14M6 60h14M100 60h14M60 60l22-22"/><circle cx="60" cy="60" r="3" fill="currentColor"/></svg>
+        <svg class="eng-cube eng-cube-a" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M40 6l30 17v34L40 74 10 57V23z"/><path d="M40 40l30-17M40 40L10 23M40 40v34"/></svg>
+        <svg class="eng-cube eng-cube-b" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M40 6l30 17v34L40 74 10 57V23z"/><path d="M40 40l30-17M40 40L10 23M40 40v34"/></svg>
+        <svg class="eng-dim" viewBox="0 0 260 30" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4v22M258 4v22M2 15h256"/><path d="M2 15l9-5M2 15l9 5M258 15l-9-5M258 15l-9 5"/><rect x="100" y="7" width="60" height="16" rx="3" fill="rgb(var(--brand-50))" stroke="none"/><text x="130" y="19" text-anchor="middle" font-size="11" fill="currentColor" stroke="none" font-family="monospace">12.50 m</text></svg>
+        <svg class="eng-skyline" viewBox="0 0 1200 120" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 118h60V70h50v48h40V40h60v78h30V84h40v34h50V20h70v98h30V60h60v58h40V90h50v28h60V50h50v68h40V30h66v88h40V74h60v44h50V56h50v62h60V96h60v22h60V44h60v74h40V82h60v36"/></svg>
+        <i class="eng-plus" style="top:16%;left:30%"></i><i class="eng-plus" style="top:70%;left:8%;animation-delay:-1.5s"></i>
+        <i class="eng-plus" style="top:30%;left:52%;animation-delay:-3s"></i><i class="eng-plus" style="top:80%;left:46%;animation-delay:-4.5s"></i>
+      </div>
+
 
       <!-- Prev / next: vertically centred on the left and right edges -->
       <button type="button" @click="prev()" aria-label="আগের স্লাইড"
@@ -18,57 +41,39 @@
       <button type="button" @click="next()" aria-label="পরের স্লাইড"
         class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 grid place-items-center h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-brand-600 text-white text-xl shadow-lg shadow-brand-600/30 hover:bg-ink-950 hover:shadow-ink-950/30 transition">›</button>
 
-      <div class="relative mx-auto max-w-7xl px-4 sm:px-16 pt-12 pb-12 lg:pt-16 lg:pb-16">
+      <div class="hv2-wrap">
         <!-- All slides share one grid cell, so the section height = tallest slide (no jumping) -->
-        <div data-hero-slider class="grid">
+        <div data-hero-slider class="hv2-stage">
           <template x-for="(s, n) in slides" :key="s.title1">
-            <article class="col-start-1 row-start-1 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center transition-opacity duration-700"
-              :class="n === i ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none z-0'" :aria-hidden="n !== i"
-              :inert="n !== i">
-              <div>
-                <span
-                  class="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700 transition duration-700 ease-out"
-                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'"
-                  :style="n === i ? 'transition-delay:.15s' : ''">
-                  <span class="h-2 w-2 rounded-full bg-brand-600 animate-pulse"></span> <span x-text="s.badge"></span>
-                </span>
-                <h1 class="mt-6 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.5] transition duration-700 ease-out"
-                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                  :style="n === i ? 'transition-delay:.25s' : ''">
-                  <span class="block" x-text="s.title1"></span>
-                  <span class="block text-gradient py-1" x-text="s.title2"></span>
+            <article class="hv2-slide" :class="{ 'is-on': n === i, 'is-leaving': n === prev && n !== i }" :aria-hidden="n !== i" :inert="n !== i">
+              <div class="hv2-copy">
+                <p class="hv2-eyebrow"><span class="hv2-dot"></span><span x-text="s.badge"></span></p>
+                <h1 class="hv2-title">
+                  <span x-text="s.title1"></span>
+                  <span class="hv2-title-accent" x-text="s.title2"></span>
                 </h1>
-                <p class="mt-6 text-lg text-gray-600 max-w-xl leading-relaxed transition duration-700 ease-out"
-                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                  :style="n === i ? 'transition-delay:.35s' : ''" x-text="s.text"></p>
-                <div class="mt-8 flex flex-wrap gap-3 transition duration-700 ease-out"
-                  :class="n === i ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                  :style="n === i ? 'transition-delay:.45s' : ''">
-                  <a :href="s.cta.href" data-magnetic
-                    class="rounded-full bg-brand-600 hover:bg-brand-700 text-white px-7 py-3.5 font-semibold transition shadow-lg shadow-brand-600/25"
-                    x-text="s.cta.label"></a>
-                  <a href="tel:01673092580" data-magnetic
-                    class="rounded-full border border-gray-300 text-ink-800 hover:border-brand-600 hover:text-brand-600 px-7 py-3.5 font-semibold transition">📞
-                    01673092580</a>
+                <p class="hv2-text" x-text="s.text"></p>
+                <div class="hv2-actions">
+                  <a :href="s.cta.href" class="hv2-btn hv2-btn-primary"><span x-text="s.cta.label"></span><span aria-hidden="true">→</span></a>
+                  <a :href="'tel:' + window.SITE.phone" class="hv2-btn hv2-btn-ghost">📞 <span x-text="window.SITE.phone"></span></a>
                 </div>
               </div>
 
-              <div class="relative transition duration-1000 ease-out"
-                :class="n === i ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'"
-                :style="n === i ? 'transition-delay:.2s' : ''">
-                <div class="absolute -inset-3 rounded-3xl bg-gradient-to-br from-brand-500/25 to-transparent blur-xl"></div>
-                <div class="relative aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-gray-200 shadow-2xl">
-                  <img :src="s.image" :alt="s.title1 + ' ' + s.title2" :loading="n === 0 ? 'eager' : 'lazy'"
-                    class="h-full w-full transition-transform duration-[1600ms] ease-out"
-                    :class="[n === i ? 'scale-100' : 'scale-110', s.fit === 'contain' ? 'object-contain p-3' : 'object-cover']"
-                    :style="'object-position:' + (s.pos || 'center')">
-                </div>
-                <div class="absolute -bottom-5 -left-3 sm:-left-6">
-                  <div data-float class="bg-white text-ink-800 rounded-xl shadow-xl ring-1 ring-gray-100 px-5 py-4 flex items-center gap-3">
-                    <span class="grid place-items-center h-11 w-11 rounded-full bg-brand-50 text-brand-600 text-xl" x-text="s.chip.icon"></span>
-                    <div>
-                      <p class="text-sm font-bold" x-text="s.chip.title"></p>
-                      <p class="text-xs text-gray-500" x-text="s.chip.sub"></p>
+              <div class="hv2-visual-wrap">
+                <div class="hv2-panel" aria-hidden="true"><i></i><i></i></div>
+                <div class="hv2-roof" aria-hidden="true"></div>
+                <div class="hv2-tower" aria-hidden="true"></div>
+                <div class="hv2-visual">
+                  <div class="hv2-img">
+                    <img :src="s.image" :alt="s.title1 + ' ' + s.title2" :loading="n === 0 ? 'eager' : 'lazy'"
+                      :class="s.fit === 'contain' ? 'is-contain' : ''" :style="'object-position:' + (s.pos || 'center')">
+                    <div class="hv2-topline"><span>ARCHITECT / ENGINEER / BUILD</span><span x-text="String(n + 1).padStart(2, '0') + ' — ' + String(slides.length).padStart(2, '0')"></span></div>
+                    <div class="hv2-chip">
+                      <span class="hv2-chip-icon" x-text="s.chip.icon"></span>
+                      <div>
+                        <p class="hv2-chip-title" x-text="s.chip.title"></p>
+                        <p class="hv2-chip-sub" x-text="s.chip.sub"></p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -78,35 +83,20 @@
         </div>
 
         <!-- Slider controls -->
-        <div class="mt-12 flex items-center gap-4">
-          <div class="flex items-center gap-2">
-            <template x-for="(s, n) in slides" :key="'d' + n">
-              <button type="button" @click="go(n)" :aria-label="t('স্লাইড') + ' ' + (n + 1)" :aria-current="n === i"
-                class="flex items-center py-3">   <!-- tall invisible button = easy to tap; the bar below is only the visual -->
-                <span class="relative block h-2 rounded-full overflow-hidden transition-all duration-500"
-                  :class="n === i ? 'w-14 bg-brand-500' : 'w-6 bg-gray-300 hover:bg-gray-400'">
-                  <span class="absolute inset-y-0 left-0 bg-brand-700 rounded-full"
-                    :style="'width:' + (n === i ? progress : 0) + '%'"></span>
-                </span>
-              </button>
-            </template>
-          </div>
+        <div class="hv2-controls">
+          <template x-for="(s, n) in slides" :key="'d' + n">
+            <button type="button" @click="go(n)" :aria-label="t('স্লাইড') + ' ' + (n + 1)" :aria-current="n === i" class="hv2-bar-btn">
+              <span class="hv2-bar" :class="n === i && 'is-on'"><span :style="'width:' + (n === i ? progress : 0) + '%'"></span></span>
+            </button>
+          </template>
         </div>
 
-        <dl class="mt-10 grid grid-cols-3 divide-x divide-gray-200 max-w-xl rounded-2xl bg-white border border-gray-200 shadow-sm">
-          <template x-for="s in stats" :key="s.label">
-            <div data-hero-stat class="px-4 py-5 text-center">
-              <dt class="text-2xl sm:text-3xl font-display font-bold text-brand-600"><span :data-count="s.value" :data-suffix="s.suffix"
-                  x-text="num(s.value) + s.suffix"></span></dt>
-              <dd class="text-xs sm:text-sm text-gray-500 mt-1" x-text="s.label"></dd>
-            </div>
-          </template>
-        </dl>
       </div>
     </section>
+    </template>
 
     <!-- Marquee of services: one plain brand-colour band, endless loop moving left -> right -->
-    <div class="bg-brand-600 text-white overflow-hidden py-4 select-none" aria-label="আমাদের সেবা সমূহ">
+    <div x-show="window.HERO_CONFIG.marquee" x-cloak class="bg-brand-600 text-white overflow-hidden py-4 select-none" aria-label="আমাদের সেবাসমূহ">
       <div class="flex whitespace-nowrap w-max" data-marquee="left">
         <!-- list is doubled so the GSAP loop (translateX -50% -> 0) is seamless -->
         <template x-for="(s,i) in [...services, ...services]" :key="i">
@@ -117,20 +107,21 @@
       </div>
     </div>
 
-    <!-- INTRO / MD MESSAGE: contained video, grows from 0.5 to 1 with scroll (GSAP scrub in app.js) -->
-    <section id="intro" class="relative overflow-hidden bg-white min-h-screen flex items-center py-16"
-      x-data="{ playing: false, v: null,
+    <!-- INTRO / MD MESSAGE: full-screen video directly under the hero; scales OUT (shrinks to a rounded card) as you scroll (GSAP scrub in app.js) -->
+    <section id="intro" class="sx-fullvideo relative overflow-hidden bg-white"
+      x-data="{ playing: false, v: null, posterOk: !window.INTRO.poster,
         play() { const v = window.parseVideo(intro.video); if (!v) return; this.v = v; this.playing = true; },
         stop() { this.playing = false; this.v = null; } }"
       @keydown.escape.window="stop()">
-      <div class="mx-auto w-full max-w-7xl px-4">
+      <div class="sx-fullvideo-wrap">
         <!-- no CSS transform/transition classes here: GSAP owns this element's scale -->
-        <div data-scale-video class="relative mx-auto max-w-6xl aspect-video overflow-hidden rounded-3xl bg-ink-950 shadow-2xl ring-1 ring-gray-200">
-          <img :src="intro.poster" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover">
+        <div data-scale-video class="sx-video-frame relative overflow-hidden bg-ink-950" :class="posterOk && 'is-ready'">
+          <img :src="intro.poster" alt="" loading="eager" decoding="async" fetchpriority="high" class="sx-poster absolute inset-0 h-full w-full object-cover"
+            @load="posterOk = true" x-init="$nextTick(() => { if ($el.complete && $el.naturalWidth) posterOk = true })">
           <div class="absolute inset-0 bg-ink-950/30"></div>
 
           <button type="button" @click="play()" :disabled="!hasIntroVideo" aria-label="ভিডিও চালু করুন"
-            class="group absolute inset-0 grid place-items-center disabled:cursor-default">
+            class="sx-play group absolute inset-0 grid place-items-center disabled:cursor-default">
             <span class="relative grid place-items-center h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-brand-600 text-white shadow-2xl shadow-brand-600/50 group-hover:scale-110 transition duration-300">
               <span x-show="hasIntroVideo" class="absolute inset-0 rounded-full bg-brand-600 animate-ping opacity-40"></span>
               <svg class="relative h-9 w-9 sm:h-12 sm:w-12 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
@@ -149,26 +140,34 @@
           </div>
         </div>
       </div>
+
+      <!-- the 3 statistics (+ heading) sit around the video: they appear on the left, right, bottom and top while the video scales out -->
+      <div class="sx-around" x-show="around.length" x-cloak>
+        <template x-for="a in around" :key="a.pos">
+          <p class="sx-around-stat" :class="'sx-around-' + { top: 't', left: 'l', right: 'r', bottom: 'b' }[a.pos]" :data-around="{ top: 't', left: 'l', right: 'r', bottom: 'b' }[a.pos]">
+            <strong x-show="a.value !== null"><span data-around-count :data-count-to="a.value" :data-suffix="a.suffix" x-text="num(a.value) + a.suffix"></span></strong>
+            <span class="sx-around-label" x-text="a.text"></span>
+          </p>
+        </template>
+      </div>
     </section>
 
     <!-- SERVICES -->
-    <section id="services" class="py-20 lg:py-28 bg-gray-50">
+    <section id="services" class="sx-sec sx-band-r py-20 lg:py-28 bg-gray-50">
       <div class="mx-auto max-w-7xl px-4">
         <div class="max-w-2xl" data-reveal>
-          <p class="text-brand-600 font-semibold tracking-wide">আমাদের সেবা সমূহ</p>
-          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">ভবন নির্মাণের প্রতিটি ধাপে আপনার পাশে</h2>
-          <p class="mt-4 text-gray-600">অভিজ্ঞ আর্কিটেক্ট ও ইঞ্জিনিয়ার টিমের মাধ্যমে প্রয়োজনীয় সব ড্রইং, ডিজাইন ও
-            অনুমোদন সেবা।</p>
+          <p class="sx-eyebrow" x-show="sections.services.eyebrow"><span class="sx-ico"><svg class="sxa-tilt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></span><span x-text="sections.services.eyebrow"></span></p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.services.title" x-text="sections.services.title"></h2>
+          <p class="mt-4 text-gray-600" x-show="sections.services.text" x-text="sections.services.text"></p>
         </div>
 
-        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="sx-services mt-12">
           <template x-for="(s,i) in services" :key="s.title">
             <article data-reveal data-shine
-              class="group relative rounded-2xl bg-white p-6 border border-gray-100 hover:border-brand-500/40 hover:shadow-xl hover:-translate-y-1 transition duration-300">
+              class="sx-card group relative rounded-2xl bg-white p-6 border border-gray-100 hover:border-brand-500/40 hover:shadow-xl hover:-translate-y-1 transition duration-300">
               <div class="flex items-start justify-between">
-                <span
-                  class="grid place-items-center h-12 w-12 rounded-xl bg-brand-50 text-brand-600 group-hover:bg-brand-600 group-hover:text-white group-hover:rotate-6 transition duration-300">
-                  <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                <span class="sx-card-ico">
+                  <svg class="sxa-bob" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
                     stroke-linejoin="round" viewBox="0 0 24 24" x-html="s.icon"></svg>
                 </span>
                 <span class="font-display text-3xl font-bold text-gray-100 group-hover:text-brand-100 transition"
@@ -183,36 +182,49 @@
     </section>
 
     <!-- PORTFOLIO -->
-    <section id="portfolio" class="py-20 lg:py-28">
-      <div class="mx-auto max-w-7xl px-4">
+    <section id="portfolio" class="sx-sec sx-sec--dark py-20 lg:py-28 bg-ink-950 text-white">
+      <div class="mx-auto max-w-7xl px-4" x-data="{ tab: 'completed' }">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6" data-reveal>
           <div class="max-w-2xl">
-            <p class="text-brand-600 font-semibold tracking-wide">আমাদের কাজ</p>
-            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">সম্পন্ন প্রজেক্টের নমুনা</h2>
-            <p class="mt-4 text-gray-600">যেকোনো প্রজেক্টে ক্লিক করে সব ড্রইং ও বিস্তারিত বিবরণ দেখুন।</p>
+            <p class="sx-eyebrow sx-eyebrow--dark" x-show="sections.portfolio.eyebrow"><span class="sx-ico"><svg class="sxa-blink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 21V5l9-2v18"/><path d="M14 9h5v12"/><path class="w" d="M8 8h3M8 12h3M8 16h3M16.5 13h.01M16.5 17h.01"/><path d="M3 21h18"/></svg></span><span x-text="sections.portfolio.eyebrow"></span></p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.portfolio.title" x-text="sections.portfolio.title"></h2>
+            <p class="mt-4 text-gray-600" x-show="sections.portfolio.text" x-text="sections.portfolio.text"></p>
           </div>
-          <a href="/portfolio"
-            class="inline-flex items-center gap-2 font-semibold text-brand-600 hover:gap-3 transition-all">সব প্রজেক্ট দেখুন
-            <span>→</span></a>
+          <a :href="sections.portfolio.btn.url" x-show="sections.portfolio.btn.show && sections.portfolio.btn.label"
+            class="inline-flex items-center gap-2 font-semibold text-brand-600 hover:gap-3 transition-all"><span x-text="sections.portfolio.btn.label"></span> <span>→</span></a>
         </div>
 
-        <div class="mt-10 grid md:grid-cols-2 gap-6">
-          <template x-for="p in projects" :key="p.slug">
+        <!-- the two main categories: Completed Projects / Running Projects -->
+        <div class="sx-worktabs mt-8" role="tablist" data-reveal>
+          <template x-for="st in ['completed', 'running']" :key="st">
+            <button type="button" role="tab" @click="tab = st" :aria-selected="tab === st" :class="tab === st && 'is-on'">
+              <span class="sx-worktabs-dot" :class="st"></span>
+              <span x-text="WORK[st].label"></span>
+              <em x-text="num(WORK[st].count)"></em>
+            </button>
+          </template>
+        </div>
+        <p class="sx-works-empty" x-show="!projects.some(q => q.status === tab)" x-cloak x-text="t('এই বিভাগে এখনো কোনো প্রজেক্ট নেই — শীঘ্রই আসছে।')"></p>
+        <div class="sx-works mt-6">
+          <template x-for="p in projects.filter(q => q.status === tab).slice(0, 4)" :key="p.slug">
             <a :href="'/project/' + p.slug" data-reveal="clip"
-              class="group relative block rounded-3xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-2xl transition duration-500">
-              <div class="img-zoom aspect-[4/3] overflow-hidden">
+              class="group relative block rounded-3xl overflow-hidden bg-ink-900 ring-1 ring-white/10 hover:ring-brand-500/60 hover:-translate-y-1 hover:shadow-2xl transition duration-500">
+              <div class="img-zoom sx-works-img overflow-hidden">
                 <img :src="p.cover" :alt="p.title" loading="lazy" class="h-full w-full object-cover"
                   :style="'object-position:' + p.coverPos">
               </div>
+              <span class="sx-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
               <div class="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/20 to-transparent"></div>
               <div class="absolute bottom-0 inset-x-0 p-6 sm:p-8 text-white">
                 <div class="flex flex-wrap gap-2">
                   <span class="text-xs font-medium rounded-full bg-brand-600 px-3 py-1" x-text="p.category"></span>
                   <span class="text-xs font-medium rounded-full bg-white/15 backdrop-blur px-3 py-1"
-                    x-text="num(p.images.length) + t('টি ড্রইং')"></span>
+                    x-text="num(p.images.length) + t('টি ড্রয়িং')"></span>
+                  <span x-show="p.status === 'running'" class="sx-run-chip"><i></i><span x-text="t('চলমান')"></span></span>
                 </div>
                 <h3 class="mt-3 text-xl sm:text-2xl font-bold leading-snug" x-text="p.title"></h3>
                 <p class="mt-1 text-sm text-gray-300" x-text="p.tagline"></p>
+                <div class="sx-prog" x-show="p.status === 'running' && p.progress !== null"><div><i :style="'width:' + p.progress + '%'"></i></div><span x-text="num(p.progress) + '%'"></span></div>
                 <span
                   class="mt-5 inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-4 transition-all">বিস্তারিত
                   দেখুন <span>→</span></span>
@@ -224,12 +236,12 @@
     </section>
 
     <!-- ACTIVITIES -->
-    <section id="activities" class="py-20 lg:py-28 bg-gray-50">
+    <section id="activities" class="sx-sec py-20 lg:py-28 bg-gray-50">
       <div class="mx-auto max-w-7xl px-4">
         <div class="max-w-2xl" data-reveal>
-          <p class="text-brand-600 font-semibold tracking-wide">গ্যালারি</p>
-          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">আমাদের কার্যক্রম</h2>
-          <p class="mt-4 text-gray-600">সাইট পরিদর্শন ও কাজের তদারকির নিয়মিত কিছু মুহূর্ত। ছবিতে ক্লিক করে বড় করে দেখুন।</p>
+          <p class="sx-eyebrow" x-show="sections.activities.eyebrow"><span class="sx-ico"><svg class="sxa-flash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg></span><span x-text="sections.activities.eyebrow"></span></p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.activities.title" x-text="sections.activities.title"></h2>
+          <p class="mt-4 text-gray-600" x-show="sections.activities.text" x-text="sections.activities.text"></p>
         </div>
 
         <div class="mt-12 columns-2 md:columns-3 gap-4 [&>*]:mb-4">
@@ -258,11 +270,12 @@
     </section>
 
     <!-- PROCESS -->
-    <section id="process" class="py-20 lg:py-28 bg-ink-950 text-white blueprint">
+    <section id="process" class="sx-sec sx-sec--red sx-gear py-16 lg:py-20">
       <div class="mx-auto max-w-7xl px-4">
         <div class="max-w-2xl" data-reveal>
-          <p class="text-brand-400 font-semibold tracking-wide">কাজের ধাপ</p>
-          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">কিভাবে আমরা কাজ করি</h2>
+          <p class="sx-eyebrow sx-eyebrow--dark" x-show="sections.process.eyebrow"><span class="sx-ico"><svg class="sxa-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg></span><span x-text="sections.process.eyebrow"></span></p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.process.title" x-text="sections.process.title"></h2>
+          <p class="mt-4 text-gray-600" x-show="sections.process.text" x-text="sections.process.text"></p>
         </div>
         <div class="mt-12 relative">
           <div class="hidden lg:block absolute left-0 right-0 top-0 h-0.5 bg-white/10">
@@ -271,7 +284,10 @@
           <ol class="lg:pt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <template x-for="(st,i) in steps" :key="st.title">
               <li data-reveal class="relative rounded-2xl border border-white/10 bg-white/5 p-6">
-                <span class="font-display text-5xl font-bold text-brand-600/70" x-text="i+1"></span>
+                <div class="sx-step">
+                  <span class="sx-step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" x-html="window.SX_STEP_ICONS[i % window.SX_STEP_ICONS.length]"></svg></span>
+                  <span class="sx-step-n" x-text="String(i+1).padStart(2,'0')"></span>
+                </div>
                 <h3 class="mt-3 text-lg font-semibold" x-text="st.title"></h3>
                 <p class="mt-2 text-sm text-gray-400 leading-relaxed" x-text="st.desc"></p>
               </li>
@@ -282,26 +298,25 @@
     </section>
 
     <!-- WHY US + banner -->
-    <section id="about" class="py-20 lg:py-28">
+    <section id="about" class="sx-sec sx-band-l py-20 lg:py-28">
       <div class="mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-12 items-center">
-        <div data-reveal="left" class="rounded-3xl overflow-hidden shadow-xl ring-1 ring-gray-100">
+        <div data-reveal="left" class="sx-rel rounded-3xl overflow-hidden shadow-xl ring-1 ring-gray-100">
+          <div class="sx-badge" aria-hidden="true"><i></i><svg class="sxa-bob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></div>
           <div class="overflow-hidden">
             <img data-parallax="0.04" src="/assets/img/571740278_830205606637811_8511991240464855537_n.jpg"
-              alt="Adnan Architects & Engineers সেবা সমূহ" loading="lazy" class="w-full h-auto scale-110">
+              alt="Adnan Architects & Engineers সেবাসমূহ" loading="lazy" class="w-full h-auto scale-110">
           </div>
         </div>
         <div>
           <div data-reveal>
-            <p class="text-brand-600 font-semibold tracking-wide">আমাদের সম্পর্কে</p>
-            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">কেন Adnan Architects &amp; Engineers?</h2>
-            <p class="mt-4 text-gray-600 leading-relaxed">
-              আমরা শুধু নকশা করি না — আপনার জমির সর্বোচ্চ ব্যবহার, নিরাপদ স্ট্রাকচার এবং দ্রুত অনুমোদন নিশ্চিত করি।
-            </p>
+            <p class="sx-eyebrow" x-show="sections.about.eyebrow"><span class="sx-ico"><svg class="sxa-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path class="d" d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span x-text="sections.about.eyebrow"></span></p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.about.title" x-text="sections.about.title"></h2>
+            <p class="mt-4 text-gray-600 leading-relaxed" x-show="sections.about.text" x-text="sections.about.text"></p>
           </div>
           <ul class="mt-8 space-y-5">
             <template x-for="w in why" :key="w.title">
               <li data-reveal="left" class="flex gap-4">
-                <span class="mt-1 grid place-items-center h-6 w-6 shrink-0 rounded-full bg-brand-600 text-white">
+                <span class="sx-check mt-1 grid place-items-center h-6 w-6 shrink-0 rounded-full bg-brand-600 text-white">
                   <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -323,12 +338,13 @@
 @endif
 @verbatim
     <!-- TESTIMONIALS: media on the left, details on the right -->
-    <section id="testimonials" class="py-20 lg:py-28 bg-ink-950 text-white blueprint">
+    <section id="testimonials" class="sx-sec sx-sec--dark sx-band-r py-20 lg:py-28 bg-ink-950 text-white blueprint">
       <div class="mx-auto max-w-7xl px-4" x-data="{ cur: 0,
           go(n) { this.cur = (n + testimonials.length) % testimonials.length; } }">
         <div class="max-w-2xl" data-reveal>
-          <p class="text-brand-400 font-semibold tracking-wide">ক্লায়েন্টদের কথা</p>
-          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold leading-[1.4]">যাঁরা আমাদের উপর ভরসা করেছেন</h2>
+          <p class="sx-eyebrow sx-eyebrow--dark" x-show="sections.testimonials.eyebrow"><span class="sx-ico"><svg class="sxa-bob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M7 17h3l2-4V7H6v6h3"/><path d="M15 17h3l2-4V7h-6v6h3"/></svg></span><span x-text="sections.testimonials.eyebrow"></span></p>
+          <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold leading-[1.4]" x-show="sections.testimonials.title" x-text="sections.testimonials.title"></h2>
+          <p class="mt-4 text-gray-600" x-show="sections.testimonials.text" x-text="sections.testimonials.text"></p>
         </div>
 
         <div data-reveal class="mt-12 grid">
@@ -405,22 +421,22 @@
     </section>
 
     <!-- INSIGHTS (slider) -->
-    <section id="insights" class="py-20 lg:py-28 bg-gray-50">
+    <section id="insights" class="sx-sec py-20 lg:py-28 bg-gray-50">
       <div class="mx-auto max-w-7xl px-4" x-data="{
           scrollBy(d) { const el = this.$refs.track; el.scrollBy({ left: d * (el.firstElementChild.offsetWidth + 24), behavior: 'smooth' }); }
         }">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6" data-reveal>
           <div class="max-w-2xl">
-            <p class="text-brand-600 font-semibold tracking-wide">ইনসাইট</p>
-            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold">জানুন, বুঝুন, সিদ্ধান্ত নিন</h2>
-            <p class="mt-4 text-gray-600">প্ল্যান পাস, ডিজাইন ও নির্মাণ নিয়ে দরকারি কিছু লেখা।</p>
+            <p class="sx-eyebrow" x-show="sections.insights.eyebrow"><span class="sx-ico"><svg class="sxa-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/></svg></span><span x-text="sections.insights.eyebrow"></span></p>
+            <h2 data-split class="mt-2 text-3xl sm:text-4xl font-bold" x-show="sections.insights.title" x-text="sections.insights.title"></h2>
+            <p class="mt-4 text-gray-600" x-show="sections.insights.text" x-text="sections.insights.text"></p>
           </div>
           <div class="flex items-center gap-3">
             <button type="button" @click="scrollBy(-1)" aria-label="আগের"
               class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-ink-950 transition">‹</button>
             <button type="button" @click="scrollBy(1)" aria-label="পরের"
               class="grid place-items-center h-11 w-11 rounded-full bg-brand-600 text-white text-xl hover:bg-ink-950 transition">›</button>
-            <a href="/insights" class="ml-2 inline-flex items-center gap-2 rounded-full border border-gray-300 hover:border-brand-600 hover:text-brand-600 px-5 py-2.5 font-semibold transition">সব ইনসাইট দেখুন <span>→</span></a>
+            <a :href="sections.insights.btn.url" x-show="sections.insights.btn.show && sections.insights.btn.label" class="ml-2 inline-flex items-center gap-2 rounded-full border border-gray-300 hover:border-brand-600 hover:text-brand-600 px-5 py-2.5 font-semibold transition"><span x-text="sections.insights.btn.label"></span> <span>→</span></a>
           </div>
         </div>
 
@@ -449,9 +465,11 @@
     </section>
 
     <!-- FAQ -->
-    <section class="py-20 lg:py-28">
+    <section class="sx-sec py-20 lg:py-28">
       <div class="mx-auto max-w-3xl px-4">
-        <h2 data-split class="text-3xl font-bold text-center">সাধারণ জিজ্ঞাসা</h2>
+        <div class="sx-eyebrow sx-eyebrow--center"><span class="sx-ico"><svg class="sxa-bob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.4 2.4 0 114.6.9c0 1.6-2.2 1.8-2.2 3.4M12 17h.01"/></svg></span></div>
+        <h2 data-split class="mt-4 text-3xl font-bold text-center" x-show="sections.faq.title" x-text="sections.faq.title"></h2>
+          <p class="mt-3 text-center text-gray-600" x-show="sections.faq.text" x-text="sections.faq.text"></p>
         <div data-reveal="scale" class="mt-10 divide-y divide-gray-200 border-y border-gray-200" x-data="{open:0}">
           <template x-for="(f,i) in faqs" :key="f.q">
             <div>
@@ -477,30 +495,29 @@
       <div class="relative mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-12">
         <div>
           <div data-reveal>
-            <h2 data-split class="text-3xl sm:text-4xl font-bold leading-tight">আপনার প্রজেক্ট নিয়ে কথা বলুন</h2>
-            <p class="mt-4 text-white/90 max-w-md">ফর্মটি পূরণ করুন অথবা সরাসরি কল করুন। আমরা দ্রুত যোগাযোগ করব।</p>
+            <h2 data-split class="text-3xl sm:text-4xl font-bold leading-tight" x-show="sections.contact.title" x-text="sections.contact.title"></h2>
+            <p class="mt-4 text-white/90 max-w-md" x-show="sections.contact.text" x-text="sections.contact.text"></p>
           </div>
           <div class="mt-8 space-y-4">
-            <a data-reveal="left" href="tel:01673092580"
+            <a data-reveal="left" :href="'tel:' + window.SITE.phone"
               class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
-              <span class="text-2xl">📞</span>
+              <span class="sx-ico sx-ico--light"><svg class="sxa-shake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M6.6 10.8a15.1 15.1 0 006.6 6.6l2.2-2.2a1 1 0 011-.25 11.4 11.4 0 003.6.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1z"/></svg></span>
               <span><span class="block text-sm text-white/80">কল করুন</span><span
-                  class="block text-xl font-bold font-display">01673092580</span></span>
+                  class="block text-xl font-bold font-display" x-text="window.SITE.phone"></span></span>
             </a>
-            <a data-reveal="left" href="mailto:anik.p.h7@gmail.com"
+            <a data-reveal="left" :href="'mailto:' + window.SITE.email"
               class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
-              <span class="text-2xl">✉️</span>
+              <span class="sx-ico sx-ico--light"><svg class="sxa-bob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
               <span><span class="block text-sm text-white/80">ইমেইল</span><span
-                  class="block font-semibold break-all">anik.p.h7@gmail.com</span></span>
+                  class="block font-semibold break-all" x-text="window.SITE.email"></span></span>
             </a>
             <div data-reveal="left" class="flex items-center gap-4 rounded-2xl bg-white/15 backdrop-blur px-5 py-4">
-              <span class="text-2xl">📍</span>
-              <span><span class="block text-sm text-white/80">অফিস</span><span class="block font-semibold">২৯৩, কে.কে টাওয়ার
-                  (গ্রাউন্ড ফ্লোর), বন্দর, নারায়ণগঞ্জ-১৪১০</span></span>
+              <span class="sx-ico sx-ico--light"><svg class="sxa-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+              <span><span class="block text-sm text-white/80">অফিস</span><span class="block font-semibold" x-text="window.SITE.address"></span></span>
             </div>
             <a data-reveal="left" href="https://www.facebook.com/adnanarchitectsandengineers/" target="_blank" rel="noopener"
               class="flex items-center gap-4 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur px-5 py-4 transition">
-              <span class="text-2xl">💬</span>
+              <span class="sx-ico sx-ico--light"><svg class="sxa-bob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" ><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.4A8 8 0 1121 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg></span>
               <span><span class="block text-sm text-white/80">Facebook পেজ</span><span
                   class="block font-semibold">adnanarchitectsandengineers</span></span>
             </a>
@@ -538,6 +555,16 @@
         </form>
       </div>
     </section>
+@endverbatim
+@php $mapSrc = \App\Support\SiteData::mapSrc(); @endphp
+@if ($mapSrc)
+    <!-- FULL-SCREEN MAP (admin: General & Contact -> Google Maps embed). The overlay stops the map from stealing the page scroll until it is clicked. -->
+    <section id="map" class="sx-map" onmouseleave="this.classList.remove('is-active')">
+      <iframe src="{{ $mapSrc }}" title="Adnan Architect &amp; Engineers" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      <button type="button" class="sx-map-lock" onclick="this.parentElement.classList.add('is-active')"><span>ম্যাপে ক্লিক করে ঘুরে দেখুন</span></button>
+    </section>
+@endif
+@verbatim
   </main>
 
   <!-- Video player (intro + testimonials). Needs internet for YouTube/Facebook; local .mp4 files work offline. -->
@@ -584,25 +611,70 @@
 @endsection
 
 @push('scripts')
+<script>window.SX_STEP_ICONS = ["<path d=\"M3 17L17 3l4 4L7 21z\"/><path d=\"M7 13l2 2M10 10l2 2M13 7l2 2\"/>", "<path d=\"M4 20l1-4L16 5l3 3L8 19z\"/><path d=\"M14 7l3 3\"/>", "<path d=\"M12 3l8 4.5v9L12 21l-8-4.5v-9z\"/><path d=\"M12 12l8-4.5M12 12L4 7.5M12 12v9\"/>", "<path d=\"M5 21V5l9-2v18\"/><path d=\"M14 9h5v12\"/><path d=\"M8 8h3M8 12h3M8 16h3\"/>", "<circle cx=\"8\" cy=\"15\" r=\"4\"/><path d=\"M11 12l9-9M16 6l3 3M14 8l2 2\"/>", "<path d=\"M5 13l4 4L19 7\"/>"];</script>
+<link rel="stylesheet" href="{{ \App\Support\Assets::v('assets/lib/sobuj_slider/sobuj-slider.css') }}">
+<script src="{{ \App\Support\Assets::v('assets/lib/sobuj_slider/sobuj-slider.js') }}"></script>
+<script>
+  (function () {
+    const v1 = window.HERO_CONFIG && window.HERO_CONFIG.style === 'v1';
+    document.documentElement.classList.add(v1 ? 'hero-v1' : 'hero-v2');
+  })();
+</script>
 @verbatim
 <script>
+    // Hero slider v1: the full-page Sobuj slider, fed by the same Hero sliders as v2
+    function sobujHero() {
+      const esc = (v) => String(v ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      return {
+        destroy() { if (this._slider && this._slider.timer) clearInterval(this._slider.timer); },
+        init() {
+          const cfg = Object.assign({ autoplay: true, interval: 6000, pauseOnHover: true }, window.HERO_CONFIG);
+          const slides = (window.HERO_SLIDES || []).map((s) => ({
+            image: s.image,
+            pos: esc(s.pos),
+            title: esc([s.title1, s.title2].filter(Boolean).join(' ')),
+            description: esc(s.text),
+            btnText: esc(s.cta && s.cta.label),
+            btnLink: esc(s.cta && s.cta.href),
+          }));
+          if (!slides.length || !window.SobujSlider) return;
+          const slider = this._slider = new window.SobujSlider('#sobuj-hero', { slides, duration: cfg.interval, height: '100svh', columns: cfg.columns || 4, arrows: cfg.arrows !== false, dots: cfg.dots !== false });
+          document.getElementById('sobuj-hero').style.setProperty('--ss-overlay', (cfg.overlay ?? 45) / 100);
+          const el = document.getElementById('sobuj-hero');
+          const stop = () => slider.timer && clearInterval(slider.timer);
+          if (!cfg.autoplay) setTimeout(stop, 300);
+          else if (cfg.pauseOnHover) {
+            el.addEventListener('mouseenter', stop);
+            el.addEventListener('mouseleave', () => slider.startAutoPlay());
+          }
+        },
+      };
+    }
+
     function heroSlider() {
       const TICK = 60;
       const cfg = Object.assign({ autoplay: true, interval: 6000, pauseOnHover: true }, window.HERO_CONFIG);
       return {
         slides: window.HERO_SLIDES,
-        i: 0, progress: 0, paused: false, touchX: 0,
+        i: 0, prev: -1, progress: 0, paused: false, touchX: 0,
         init() {
           const respect = !(window.SITE && window.SITE.respectReducedMotion === false);
           if (!cfg.autoplay || (respect && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
           this.$watch('paused', (v) => { if (v && !cfg.pauseOnHover) this.paused = false; });
-          setInterval(() => {
+          this._timer = setInterval(() => {
             if (this.paused || document.hidden) return;
             this.progress += 100 * TICK / cfg.interval;
             if (this.progress >= 100) this.next();
           }, TICK);
         },
-        go(n) { this.i = (n + this.slides.length) % this.slides.length; this.progress = 0; },
+        tilt(e) {
+          if (e.pointerType === 'touch' || document.documentElement.classList.contains('reduce-motion')) return;
+          const r = this.$root.getBoundingClientRect();
+          this.$root.style.setProperty('--tilt-y', (((e.clientX - r.left) / r.width - .5) * 7).toFixed(2) + 'deg');
+          this.$root.style.setProperty('--tilt-x', ((-((e.clientY - r.top) / r.height - .5)) * 5).toFixed(2) + 'deg');
+        },
+        destroy() { clearInterval(this._timer); },   // Alpine calls this when Turbo swaps the page out
+        go(n) { const t = (n + this.slides.length) % this.slides.length; if (t !== this.i) this.prev = this.i; this.i = t; this.progress = 0; },
         next() { this.go(this.i + 1); },
         prev() { this.go(this.i - 1); },
         swipe(x) {
@@ -662,7 +734,9 @@
           if (e.key === 'ArrowLeft') this.prev();
         },
 
-        stats: window.STATS,
+        around: window.AROUND || [],
+        sections: window.SECTIONS || {},
+        WORK: window.WORK || {},
         services: window.SERVICES.map(s => ({ ...s, icon: icon[s.icon] })),
         steps: window.STEPS,
         why: window.WHY,

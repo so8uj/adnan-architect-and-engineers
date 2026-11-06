@@ -4,7 +4,7 @@
     <section id="clients" x-show="clients.length" x-cloak class="py-16 lg:py-24 bg-gray-50">
       <div class="mx-auto max-w-7xl px-4">
         <div class="mx-auto max-w-2xl text-center" data-reveal>
-          <p class="text-brand-600 font-semibold tracking-wide" x-text="clientsHead.subtitle || t('যাঁরা আমাদের উপর আস্থা রেখেছেন')"></p>
+          <p class="text-brand-600 font-semibold tracking-wide" x-text="clientsHead.subtitle || t('যাঁরা আমাদের ওপর আস্থা রেখেছেন')"></p>
           <h2 class="mt-2 text-3xl sm:text-4xl font-bold leading-[1.4]" x-text="clientsHead.title || t('আমাদের ক্লায়েন্ট')"></h2>
         </div>
 

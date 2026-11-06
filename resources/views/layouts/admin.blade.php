@@ -4,6 +4,7 @@
     use App\Support\Theme;
     $unread = \App\Models\ContactMessage::where('is_read', false)->count();
     $groups = AdminMenu::groups();
+    $webPage = AdminMenu::currentWebsitePage();
     $icon = fn ($name) => '<svg class="h-[18px] w-[18px] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">'.AdminMenu::icon($name).'</svg>';
 @endphp
 <!DOCTYPE html>
@@ -34,10 +35,12 @@
 
       <nav class="px-3 pb-8 text-sm">
         <a href="{{ route('admin.dashboard') }}" class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 {{ request()->routeIs('admin.dashboard') ? 'bg-brand-600 text-white' : 'hover:bg-white/10' }}">{!! $icon('dash') !!} Dashboard</a>
+        @if (auth()->user()->hasPermission('messages.view'))
         <a href="{{ route('admin.messages') }}" class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 {{ request()->routeIs('admin.messages') ? 'bg-brand-600 text-white' : 'hover:bg-white/10' }}">
           {!! $icon('mail') !!} <span class="flex-1">Messages</span>
           @if ($unread)<span class="rounded-full bg-brand-500 px-2 text-xs text-white">{{ $unread }}</span>@endif
         </a>
+        @endif
 
         @foreach ($groups as $group)
           <div class="mb-1" x-data="{ open: {{ $group['open'] ? 'true' : 'false' }} }">
@@ -81,6 +84,22 @@
       </header>
 
       <main class="flex-1 p-4 sm:p-6">
+        @if ($webPage)
+          {{-- Website Management: which frontend page you are on, and a tab for every screen that controls it --}}
+          <div class="mb-5">
+            <p class="flex items-center gap-2 text-sm text-gray-500">
+              <span class="font-semibold text-gray-700">Website Management</span><span>›</span><span class="font-semibold text-brand-600">{{ $webPage['label'] }}</span>
+            </p>
+            @if (count($webPage['tabs']) > 1)
+              <nav class="mt-3 -mb-px flex gap-1 overflow-x-auto border-b border-gray-200 pb-px" aria-label="{{ $webPage['label'] }} sections">
+                @foreach ($webPage['tabs'] as $tab)
+                  <a href="{{ $tab['url'] }}" @if ($tab['active']) aria-current="page" @endif
+                    class="whitespace-nowrap rounded-t-lg border-b-2 px-4 py-2.5 text-sm font-semibold transition {{ $tab['active'] ? 'border-brand-600 bg-white text-brand-600' : 'border-transparent text-gray-500 hover:bg-white/70 hover:text-gray-800' }}">{{ $tab['label'] }}</a>
+                @endforeach
+              </nav>
+            @endif
+          </div>
+        @endif
         @if (session('status'))
           <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">{{ session('status') }}</div>
         @endif

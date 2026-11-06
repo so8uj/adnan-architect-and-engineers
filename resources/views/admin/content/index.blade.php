@@ -4,6 +4,24 @@
 
 @section('content')
 <div x-data="sortRows(@js(route('admin.content.reorder', $def['slug'])))">
+  @if (! empty($def['config']))
+    @php $cfgStyle = ($config[$def['style_key']] ?? 'v2') === 'v1' ? 'v1' : 'v2'; @endphp
+    <form method="POST" action="{{ route('admin.content.config', $def['slug']) }}" x-data="{ style: @js($cfgStyle) }"
+      @change="if ($event.target.name === @js($def['style_key'])) style = $event.target.value"
+      class="mb-6 rounded-xl bg-white px-5 pb-4 shadow-sm ring-1 ring-gray-100">
+      @csrf @method('PUT')
+      <h2 class="-mx-5 border-b border-gray-100 bg-gray-50 px-5 py-2 text-xs font-bold uppercase tracking-wider text-gray-500">Slider settings</h2>
+      <div class="grid gap-x-8 xl:grid-cols-12">
+        @foreach ($def['config'] as $f)
+          <div class="xl:col-span-4" @if (! empty($f['styles'])) x-show="{{ json_encode($f['styles']) }}.includes(style)" @endif>
+            @include('admin.partials.field', ['f' => $f, 'value' => $config[$f['key']] ?? null, 'prefix' => null])
+          </div>
+        @endforeach
+      </div>
+      <button class="mt-3 rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">Save slider settings</button>
+    </form>
+  @endif
+
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <p class="text-sm text-gray-500">{{ $items->count() }} {{ \Illuminate\Support\Str::plural($def['single'], $items->count()) }}</p>

@@ -18,14 +18,11 @@ class Features
         return static::master() && (bool) config("features.modules.$module", false);
     }
 
-    /** May this admin user open the feature's admin screens? By default only the developer account may. */
+    /** May this admin user open the feature's admin screens? Every logged-in admin may, as soon as the module is switched on. */
     public static function adminCan(string $module, ?User $user = null): bool
     {
         $user ??= auth()->user();
-        if (! $user || ! static::on($module)) {
-            return false;
-        }
 
-        return config('features.admin_visible_to') === 'all' || (bool) $user->is_developer;
+        return $user !== null && static::on($module);
     }
 }

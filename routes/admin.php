@@ -14,7 +14,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
     Route::post('login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:10,1']);
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', \App\Http\Middleware\AuthorizeAdmin::class])->group(function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('cache/clear', [DashboardController::class, 'clearCache'])->name('cache.clear');
@@ -29,6 +29,29 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile');
         Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::resource('users', UserController::class)->except(['show']);
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class)->except(['show']);
+        Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class)->except(['show']);
+
+        // HR & Attendance (docs/hr-plan.md). "me" screens: everybody. Everything else: a role permission.
+        Route::middleware('feature:attendance')->group(function () {
+            $a = \App\Http\Controllers\Admin\AttendanceController::class;
+            $sh = \App\Http\Controllers\Admin\ShiftController::class;
+            Route::get('attendance/me', [$a, 'me'])->name('attendance.me');
+            Route::post('attendance/clock-in', [$a, 'clockIn'])->name('attendance.in');
+            Route::post('attendance/clock-out', [$a, 'clockOut'])->name('attendance.out');
+            Route::get('attendance', [$a, 'index'])->name('attendance.index')->middleware('perm:hr.attendance.view');
+            Route::get('attendance/entry', [$a, 'entry'])->name('attendance.entry')->middleware('perm:hr.attendance.manage');
+            Route::put('attendance/entry', [$a, 'save'])->name('attendance.save')->middleware('perm:hr.attendance.manage');
+            Route::get('shifts', [$sh, 'index'])->name('shifts.index')->middleware('perm:hr.shifts.view');
+            Route::middleware('perm:hr.shifts.manage')->group(function () use ($sh) {
+                Route::get('shifts/create', [$sh, 'create'])->name('shifts.create');
+                Route::post('shifts', [$sh, 'store'])->name('shifts.store');
+                Route::post('shifts/assign', [$sh, 'assign'])->name('shifts.assign');
+                Route::get('shifts/{shift}/edit', [$sh, 'edit'])->name('shifts.edit');
+                Route::put('shifts/{shift}', [$sh, 'update'])->name('shifts.update');
+                Route::delete('shifts/{shift}', [$sh, 'destroy'])->name('shifts.destroy');
+            });
+        });
 
         Route::get('messages', [MessageController::class, 'index'])->name('messages');
         Route::post('messages/{message}/read', [MessageController::class, 'read'])->name('messages.read');
@@ -38,6 +61,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [ContentController::class, 'index'])->name('content.index');
             Route::get('create', [ContentController::class, 'create'])->name('content.create');
             Route::post('/', [ContentController::class, 'store'])->name('content.store');
+            Route::put('config', [ContentController::class, 'saveConfig'])->name('content.config');
             Route::post('reorder', [ContentController::class, 'reorder'])->name('content.reorder');
             Route::get('{id}/edit', [ContentController::class, 'edit'])->name('content.edit');
             Route::put('{id}', [ContentController::class, 'update'])->name('content.update');

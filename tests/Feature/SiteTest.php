@@ -283,15 +283,22 @@ class SiteTest extends TestCase
         $this->assertNull(ContactMessage::find($m->id));
     }
 
-    public function test_sidebar_has_home_page_menu_with_submenus(): void
+    public function test_sidebar_has_website_management_menu_and_home_tabs(): void
     {
         $html = $this->admin()->get('/admin')->getContent();
-        foreach (['Home Page', 'Hero sliders', 'Services', 'Process steps', 'Why choose us', 'Testimonials', 'Activities gallery', 'FAQs', 'Home page SEO &amp; code', 'Portfolio', 'Insights', 'Settings'] as $label) {
+        foreach (['Website Management', 'Home Page', 'Our Work', 'Insights', 'Header', 'Footer', 'Global settings', 'Administration'] as $label) {
             $this->assertStringContainsString($label, $html, $label);
         }
-        // the group of the current page opens by itself
+        // a Home Page screen shows the breadcrumb and one tab per section; the group opens by itself
         $services = $this->get('/admin/c/services')->getContent();
         $this->assertMatchesRegularExpression('/x-data="\{ open: true \}"[\s\S]*?Home Page/', $services);
+        foreach (['Hero slider', 'Section headings', 'Intro video', 'Services', 'Process', 'Why us', 'Testimonials', 'Activities', 'FAQs', 'SEO &amp; code'] as $tab) {
+            $this->assertStringContainsString('>'.$tab.'</a>', $services, $tab);
+        }
+        $this->assertStringContainsString('aria-current="page"', $services);
+        // other pages carry their own tab strip; the Clients tab stays hidden while the module is off
+        $this->get('/admin/c/projects')->assertSee('>Projects</a>', false);
+        $this->assertStringNotContainsString('Clients strip', $services);
     }
 
     public function test_drag_and_drop_order_is_saved_and_shown_on_the_site(): void

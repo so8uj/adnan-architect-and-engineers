@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Support\FieldProcessor;
 use App\Support\Features;
 use App\Support\SiteData;
@@ -21,7 +22,51 @@ class ContentController extends Controller
         // future features answer "not found" unless they are switched on AND the user may see them
         abort_if(! empty($all[$resource]['feature']) && ! Features::adminCan($all[$resource]['feature']), 404);
 
-        return $all[$resource] + ['slug' => $resource];
+        $def = $all[$resource] + ['slug' => $resource];
+
+        // lists with a "style_key" (hero slider v1 / v2) only show the fields that belong to the chosen style
+        if (! empty($def['style_key'])) {
+            $style = Setting::get($def['style_key'], 'v2') === 'v1' ? 'v1' : 'v2';
+            $def['style'] = $style;
+            $def['fields'] = $this->forStyle($def['fields'], $style);
+        }
+
+        return $def;
+    }
+
+    private function forStyle(array $fields, string $style): array
+    {
+        $out = [];
+        foreach ($fields as $f) {
+            if (! empty($f['styles']) && ! in_array($style, $f['styles'], true)) {
+                continue;
+            }
+            $f['label'] = $f['labels'][$style] ?? $f['label'];
+            $f['help'] = $f['helps'][$style] ?? ($f['help'] ?? null);
+            $out[] = $f;
+        }
+
+        return $out;
+    }
+
+    /** Saves the slider-wide options shown above a list (config/admin.php -> "config"). */
+    public function saveConfig(Request $request, string $resource): RedirectResponse
+    {
+        $all = config('admin.resources');
+        abort_unless(! empty($all[$resource]['config']), 404);
+        $fields = $all[$resource]['config'];
+        $request->validate(FieldProcessor::rules($fields));
+
+        $current = [];
+        foreach ($fields as $f) {
+            $current[$f['key']] = Setting::get($f['key']);
+        }
+        foreach (FieldProcessor::collect($fields, $request->input(), $request->allFiles(), $current) as $key => $value) {
+            Setting::put($key, $value ?? '');
+        }
+        SiteData::flush();
+
+        return redirect()->route('admin.content.index', $resource)->with('status', 'Slider settings saved.');
     }
 
     public function index(string $resource)
@@ -29,7 +74,12 @@ class ContentController extends Controller
         $def = $this->def($resource);
         $items = $def['model']::query()->orderBy('sort')->orderBy('id')->get();
 
-        return view('admin.content.index', compact('def', 'items'));
+        $config = [];
+        foreach ($def['config'] ?? [] as $f) {
+            $config[$f['key']] = Setting::get($f['key']);
+        }
+
+        return view('admin.content.index', compact('def', 'items', 'config'));
     }
 
     public function create(string $resource)
@@ -114,6 +164,13 @@ class ContentController extends Controller
             if (array_key_exists($k, $data) && ! $data[$k]) {
                 $data[$k] = 'cover';
             }
+        }
+        // Our Work main category: completed unless explicitly "running"; progress is a 0-100 percentage
+        if (array_key_exists('status', $data) && $def['model'] === \App\Models\Project::class) {
+            $data['status'] = $data['status'] === 'running' ? 'running' : 'completed';
+        }
+        if (array_key_exists('progress', $data) && $data['progress'] !== null) {
+            $data['progress'] = max(0, min(100, (int) $data['progress']));
         }
         if (array_key_exists('type', $data) && ! $data['type']) {
             $data['type'] = 'text';

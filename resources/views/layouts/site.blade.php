@@ -64,7 +64,7 @@
   {{-- ===== styles ===== --}}
   <link rel="stylesheet" href="{{ Assets::v('assets/fonts/fonts.css') }}">
   <link rel="stylesheet" href="{{ Assets::v('assets/css/tailwind.css') }}">
-  <link rel="stylesheet" href="{{ Assets::v('assets/css/style.css') }}">
+  <link rel="stylesheet" data-turbo-track="reload" href="{{ Assets::v('assets/css/style.css') }}">
   <style id="theme-vars">{!! Theme::css() !!}</style>
   @if ($seo['css'])
   <style id="custom-css">{!! $seo['css'] !!}</style>
@@ -80,6 +80,15 @@
   <script src="{{ Assets::v('assets/js/i18n.js') }}"></script>
   <script src="{{ Assets::v('assets/js/video.js') }}"></script>
 
+  @if ($nav === 'home' && ! empty($payload['INTRO']['poster']))
+  <link rel="preload" as="image" href="{{ $payload['INTRO']['poster'] }}" fetchpriority="high">
+  @endif
+
+  {{-- Turbo Drive: page changes without a reload (SPA feel). Pages are never cached (Alpine / GSAP state), so Back always gets a fresh page. --}}
+  <meta name="turbo-cache-control" content="no-cache">
+  <script defer data-turbo-track="reload" src="{{ Assets::v('assets/vendor/turbo.js') }}"></script>
+  {{-- header / footer / preloader are built by layout.js: for the first page here (before Alpine starts), for later pages by Turbo's before-render --}}
+  <script defer data-turbo-track="reload" src="{{ Assets::v('assets/js/layout.js') }}"></script>
   <script defer src="{{ Assets::v('assets/vendor/alpine-collapse.min.js') }}"></script>
   <script defer src="{{ Assets::v('assets/vendor/alpine.min.js') }}"></script>
   <script defer src="{{ Assets::v('assets/vendor/gsap.min.js') }}"></script>
@@ -88,7 +97,7 @@
   @if ($nav === 'home')
   <script defer src="{{ Assets::v('assets/js/marquee.js') }}"></script>
   @endif
-  <script defer src="{{ Assets::v('assets/js/app.js') }}"></script>
+  <script defer data-turbo-track="reload" src="{{ Assets::v('assets/js/app.js') }}"></script>
 
   {!! $seo['head_code'] !!}
 </head>
@@ -102,7 +111,6 @@
   @yield('content')
 
   @stack('scripts')
-  <script src="{{ Assets::v('assets/js/layout.js') }}"></script>
 
   {!! $seo['body_end_code'] !!}
   @if ($seo['js'])

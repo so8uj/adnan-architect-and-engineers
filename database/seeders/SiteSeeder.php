@@ -106,12 +106,12 @@ class SiteSeeder extends Seeder
             'whatsapp' => $site['whatsapp'],
             'messenger' => $site['messenger'],
             'greeting' => 'Hello',
+            'map_embed' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3655.694160491198!2d90.50938587589422!3d23.615299093948135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b100442ac6bf%3A0x59efcac10ae1ab04!2sAdnan%20Architect%20%26%20Engineers!5e0!3m2!1sen!2sbd!4v1793714194041!5m2!1sen!2sbd',
             'logo' => 'assets/img/logo.png',
             'favicon' => 'assets/img/logo.png',
-            'stats' => array_map(fn ($s, $e) => ['value' => $s['value'], 'suffix' => $s['suffix'], 'label' => $this->bi($s['label'], $e['label'])], $this->bn['STATS'], $this->en['STATS']),
             // clients section (future feature)
             'clients_title' => $this->bi('আমাদের ক্লায়েন্ট', 'Our Clients'),
-            'clients_subtitle' => $this->bi('যাঁরা আমাদের উপর আস্থা রেখেছেন', 'Trusted by'),
+            'clients_subtitle' => $this->bi('যাঁরা আমাদের ওপর আস্থা রেখেছেন', 'Trusted by'),
             'clients_home_limit' => 10,
             // header
             'header_topbar_show' => true,
@@ -138,28 +138,30 @@ class SiteSeeder extends Seeder
             'credit_name' => $this->bi($site['credit']['name'], $en['credit']['name']),
             'credit_url' => $site['credit']['url'],
             // motion
-            'hero_autoplay' => true, 'hero_interval' => 6000, 'hero_pause_on_hover' => true,
+            'hero_style' => 'v2', 'hero_columns' => 4, 'hero_overlay' => 45, 'hero_arrows' => true, 'hero_dots' => true, 'hero_autoplay' => true, 'hero_interval' => 6000, 'hero_pause_on_hover' => true,
             'preloader_show' => true, 'preloader_min_ms' => 1200, 'preloader_first_visit_only' => true,
             'respect_reduced_motion' => false,
             // intro video section
-            'intro_eyebrow' => $this->bi($intro['eyebrow'], $introEn['eyebrow']),
-            'intro_title' => $this->bi($intro['title'], $introEn['title']),
-            'intro_paragraphs' => $this->bi($intro['paragraphs'], $introEn['paragraphs']),
-            'intro_points' => $this->bi($intro['points'], $introEn['points']),
-            'intro_person_name' => $this->bi($intro['person']['name'], $introEn['person']['name']),
-            'intro_person_role' => $this->bi($intro['person']['role'], $introEn['person']['role']),
+            // section headings (label / heading / paragraph / buttons) above every home page section
+            ...\App\Support\SiteData::sectionSettingDefaults(),
+            ...\App\Support\SiteData::workSettingDefaults(),
+            // the plain texts around the intro video (admin: Settings -> Home sections): title on top, the three statistics left / right / bottom
+            'around_items' => array_merge(
+                [['pos' => 'top', 'value' => null, 'suffix' => '', 'text' => $this->bi($intro['title'], $introEn['title'])]],
+                array_map(fn ($s, $e, $pos) => ['pos' => $pos, 'value' => $s['value'], 'suffix' => $s['suffix'], 'text' => $this->bi($s['label'], $e['label'])], $this->bn['STATS'], $this->en['STATS'], ['left', 'right', 'bottom']),
+            ),
             'intro_video' => $intro['video'],
             'intro_poster' => $intro['poster'],
             // theme
             'theme_default' => 'light',
-            'theme_light_primary' => '#e8322c', 'theme_light_bg' => '#ffffff', 'theme_light_surface' => '#ffffff', 'theme_light_text' => '#1c1c1f',
-            'theme_dark_primary' => '#e8322c', 'theme_dark_bg' => '#0d0d10', 'theme_dark_surface' => '#17171b', 'theme_dark_text' => '#ececf0',
+            'theme_light_primary' => '#e41431', 'theme_light_bg' => '#f7f7f8', 'theme_light_surface' => '#ffffff', 'theme_light_text' => '#111113',
+            'theme_dark_primary' => '#e41431', 'theme_dark_bg' => '#0c0c0e', 'theme_dark_surface' => '#161619', 'theme_dark_text' => '#f2f2f3',
             // custom code (global)
             'code_head' => '', 'code_body_start' => '', 'code_body_end' => '', 'code_css' => '', 'code_js' => '',
             // SEO (global)
             'seo_title_separator' => '|',
             'seo_title_suffix' => $this->bi('Adnan Architects & Engineers', 'Adnan Architects & Engineers'),
-            'seo_default_description' => $this->bi('সয়েল টেস্ট, আর্কিটেকচারাল ও স্ট্রাকচারাল ড্রইং, ইলেকট্রিক্যাল ও প্লাম্বিং ড্রইং, 3D মডেল, রাজউক, পৌরসভা ও উপজেলা প্ল্যান পাস।', 'Soil test, architectural & structural drawings, electrical & plumbing drawings, 3D models, and RAJUK, municipality & upazila plan approval.'),
+            'seo_default_description' => $this->bi('আর্কিটেকচারাল, স্ট্রাকচারাল ও ইলেকট্রিক্যাল ড্রয়িং, প্লাম্বিং ও ফায়ারফাইটিং, সয়েল টেস্ট, 3D ও ল্যান্ডস্কেপ ডিজাইন, ইন্টেরিয়র ডিজাইন এবং রাজউক, পৌরসভা ও উপজেলা প্ল্যান।', 'Architectural, structural and electrical drawings, plumbing & firefighting, soil test, 3D & landscape design, interior design, and RAJUK, Pourashava & Upazila plan approval.'),
             'seo_default_og_image' => 'assets/img/cover.jpg',
             'seo_twitter_handle' => '', 'seo_google_verification' => '', 'seo_bing_verification' => '',
             'seo_ga_id' => '', 'seo_gtm_id' => '', 'seo_fb_pixel_id' => '',

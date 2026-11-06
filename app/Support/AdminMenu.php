@@ -10,70 +10,113 @@ use App\Models\Page;
  */
 class AdminMenu
 {
-    public static function groups(): array
+    /** URL + "is this the current screen?" for one pointer ('content' | 'setting' | 'seo' | 'route'). Null = cannot be resolved / not allowed. */
+    private static function resolve(array $t): ?array
     {
-        $pages = Page::pluck('id', 'key');
+        if (! empty($t['feature']) && ! Features::adminCan($t['feature'])) {
+            return null;
+        }
+        foreach (['content', 'setting', 'seo'] as $type) {
+            if (isset($t[$type])) {
+                $m = Permissions::moduleFor($type, $t[$type]);
+                if (! Permissions::allows(auth()->user(), $m ? $m.'.view' : '!') && ! auth()->user()?->isSuper()) {
+                    return null;
+                }
+            }
+        }
+        if (isset($t['module']) && ! Permissions::allows(auth()->user(), $t['module'].'.view')) {
+            return null;
+        }
+        if (isset($t['content'])) {
+            $k = $t['content'];
+            if (! empty(config("admin.resources.$k.feature")) && ! Features::adminCan(config("admin.resources.$k.feature"))) {
+                return null;
+            }
 
-        $content = fn (string $key, ?string $label = null) => [
-            'label' => $label ?? config("admin.resources.$key.title"),
-            'url' => route('admin.content.index', $key),
-            'active' => request()->is("admin/c/$key", "admin/c/$key/*"),
-        ];
-        $setting = fn (string $key, ?string $label = null) => [
-            'label' => $label ?? config("admin.settings.$key.title"),
-            'url' => route('admin.settings.edit', $key),
-            'active' => request()->is("admin/settings/$key"),
-        ];
-        $seo = fn (string $key, string $label) => isset($pages[$key]) ? [
-            'label' => $label,
-            'url' => route('admin.pages.edit', $pages[$key]),
-            'active' => request()->is('admin/pages/'.$pages[$key]),
-        ] : null;
+            return ['label' => $t['label'] ?? config("admin.resources.$k.title"), 'url' => route('admin.content.index', $k),
+                'active' => request()->is("admin/c/$k", "admin/c/$k/*")];
+        }
+        if (isset($t['setting'])) {
+            $k = $t['setting'];
 
-        $groups = [
-            ['label' => 'Home Page', 'icon' => 'home', 'children' => [
-                $content('hero-slides'),
-                $setting('home', 'Stats, intro video & credit'),
-                $content('services'),
-                $content('steps'),
-                $content('why-us'),
-                $content('testimonials'),
-                $content('activities'),
-                $content('faqs'),
-                $seo('home', 'Home page SEO & code'),
-            ]],
-            ['label' => 'Portfolio', 'icon' => 'building', 'children' => [
-                $content('projects'),
-                $seo('portfolio', 'Portfolio page SEO & code'),
-            ]],
-            ['label' => 'Insights', 'icon' => 'book', 'children' => [
-                $content('insights', 'Insights (blog posts)'),
-                $seo('insights', 'Insights page SEO & code'),
-            ]],
-            ['label' => 'Header & Footer', 'icon' => 'layout', 'children' => [
-                $setting('header'),
-                $setting('footer'),
-            ]],
-            ['label' => 'Settings', 'icon' => 'cog', 'children' => [
-                $setting('general'),
-                $setting('theme'),
-                $setting('motion'),
-                $setting('code'),
-                $setting('seo'),
-                ['label' => 'User management', 'url' => route('admin.users.index'), 'active' => request()->is('admin/users', 'admin/users/*')],
-            ]],
-        ];
+            return ['label' => $t['label'] ?? config("admin.settings.$k.title"), 'url' => route('admin.settings.edit', $k),
+                'active' => request()->is("admin/settings/$k")];
+        }
+        if (isset($t['seo'])) {
+            $id = Page::where('key', $t['seo'])->value('id');
 
-        // future features: only listed when switched on in .env and visible to this user (see config/features.php)
-        if (Features::adminCan('clients')) {
-            array_splice($groups, 3, 0, [['label' => 'Clients', 'icon' => 'users', 'children' => [
-                $content('clients', 'Client list'),
-                $setting('clients', 'Homepage section'),
-            ]]]);
+            return $id ? ['label' => $t['label'] ?? 'SEO & code', 'url' => route('admin.pages.edit', $id), 'active' => request()->is("admin/pages/$id")] : null;
+        }
+        if (isset($t['route']) && \Illuminate\Support\Facades\Route::has($t['route'])) {
+            $r = $t['route'];
+
+            return ['label' => $t['label'], 'url' => route($r), 'active' => request()->routeIs($r, str_replace('.index', '.*', $r))];
         }
 
+        return null;
+    }
+
+    /** Website Management pages with their tabs resolved (hidden / unknown tabs dropped, "active" flags set). */
+    public static function websitePages(): array
+    {
+        $out = [];
+        foreach (config('admin.website', []) as $key => $page) {
+            $tabs = array_values(array_filter(array_map(fn ($t) => static::resolve($t), $page['tabs'] ?? [])));
+            if (! $tabs) {
+                continue;
+            }
+            $out[$key] = ['key' => $key, 'label' => $page['label'], 'icon' => $page['icon'] ?? 'globe', 'tabs' => $tabs,
+                'url' => $tabs[0]['url'], 'active' => (bool) array_filter($tabs, fn ($t) => $t['active'])];
+        }
+
+        return $out;
+    }
+
+    /** The Website Management page the admin is on right now (for the tab bar), or null on any other screen. */
+    public static function currentWebsitePage(): ?array
+    {
+        foreach (static::websitePages() as $page) {
+            if ($page['active']) {
+                return $page;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The sidebar: main menus with sub menus. Dashboard and Messages sit above these in the layout.
+     *   Website Management  -> one item per frontend page (config 'website'); the screens inside a page are tabs
+     *   CRM                 -> modules that are switched on (config 'crm')
+     *   Administration      -> users (roles & permissions will join them), my profile
+     */
+    public static function groups(): array
+    {
+        $groups = [];
+
+        $pages = static::websitePages();
+        if ($pages) {
+            $groups[] = ['label' => 'Website Management', 'icon' => 'globe', 'children' => array_map(fn ($p) => ['label' => $p['label'], 'url' => $p['url'], 'active' => $p['active']], array_values($pages))];
+        }
+
+        $crm = array_values(array_filter(array_map(fn ($m) => static::resolve($m), config('admin.crm', []))));
+        if ($crm) {
+            $groups[] = ['label' => 'CRM', 'icon' => 'users', 'children' => $crm];
+        }
+
+        $hr = array_values(array_filter(array_map(fn ($m) => static::resolve($m), config('admin.hr', []))));
+        if ($hr) {
+            $groups[] = ['label' => 'HR & Attendance', 'icon' => 'clock', 'children' => $hr];
+        }
+
+        $groups[] = ['label' => 'Administration', 'icon' => 'shield', 'children' => array_values(array_filter([
+            Permissions::allows(auth()->user(), 'users.view') ? ['label' => 'User management', 'url' => route('admin.users.index'), 'active' => request()->is('admin/users', 'admin/users/*')] : null,
+            Permissions::allows(auth()->user(), 'departments.view') ? ['label' => 'Departments', 'url' => route('admin.departments.index'), 'active' => request()->is('admin/departments', 'admin/departments/*')] : null,
+            Permissions::allows(auth()->user(), 'roles.view') ? ['label' => 'Roles & permissions', 'url' => route('admin.roles.index'), 'active' => request()->is('admin/roles', 'admin/roles/*')] : null,
+            ['label' => 'My profile', 'url' => route('admin.profile'), 'active' => request()->is('admin/profile')],
+        ]))];
+
         foreach ($groups as &$g) {
-            $g['children'] = array_values(array_filter($g['children']));
             $g['open'] = (bool) array_filter($g['children'], fn ($c) => $c['active']);
         }
 
@@ -92,6 +135,9 @@ class AdminMenu
             'cog' => '<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 00-2-1.2L14 3h-4l-.6 2.6a7 7 0 00-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 005 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9c.6.5 1.3.9 2 1.2L10 21h4l.6-2.6c.7-.3 1.4-.7 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/>',
             'dash' => '<path d="M4 13h7V4H4v9zm9 7h7v-9h-7v9zM4 20h7v-5H4v5zm9-11h7V4h-7v5z"/>',
             'mail' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+            'clock' => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+            'globe' => '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
+            'shield' => '<path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/>',
         ][$name] ?? '';
     }
 }

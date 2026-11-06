@@ -19,6 +19,12 @@
         <span class="text-ink-800">{{ $p['category'] }}</span>
       </nav>
       <span data-ph class="mt-5 inline-block text-xs font-medium rounded-full bg-brand-600 text-white px-3 py-1">{{ $p['category'] }}</span>
+      @if (($p['status'] ?? 'completed') === 'running')
+        <span data-ph class="sx-run-chip sx-run-chip--solid"><i></i><span>চলমান</span></span>
+        @if ($p['progress'] !== null)
+          <div data-ph class="sx-prog sx-prog--page"><div><i style="width: {{ (int) $p['progress'] }}%"></i></div><span>{{ \App\Support\SiteData::digits((string) (int) $p['progress'], app()->getLocale()) }}%</span></div>
+        @endif
+      @endif
       <h1 data-ph class="mt-3 max-w-3xl text-3xl sm:text-5xl font-bold leading-[1.4]">{{ $p['title'] }}</h1>
       <p data-ph class="mt-4 max-w-2xl text-gray-600 text-lg">{{ $p['summary'] }}</p>
     </div>

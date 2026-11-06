@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<title>Adnan intro film composer</title>
+<link rel="stylesheet" href="file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/assets/fonts/fonts.css">
+<style>
+  :root { --red: #e41431; --red-d: #a50e24; --ink: #0b0b0d; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; font-family: 'Hind Siliguri', 'Poppins', sans-serif; color: #fff; }
+  #stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); }
+  .scene { position: absolute; inset: 0; opacity: 0; overflow: hidden; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size: 60px 60px; }
+  .bgimg { position: absolute; inset: -6%; background-size: cover; background-position: center; will-change: transform; }
+  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%); pointer-events: none; }
+  .grain { position: absolute; inset: 0; opacity: .07; pointer-events: none; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .plate { background: #fff; border-radius: 28px; padding: 26px 38px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+  .plate img { display: block; width: 560px; height: auto; }
+
+  /* S1 */
+  #s1 { background: radial-gradient(ellipse at 50% 38%, #26080e 0%, #0b0b0d 70%); }
+  #house { position: absolute; left: 740px; top: 120px; width: 440px; height: 380px; overflow: visible; }
+  #house path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  #s1 .plate { position: absolute; left: 50%; top: 520px; transform: translateX(-50%); }
+  #s1 .plate img { width: 500px; }
+  #tag1 { position: absolute; left: 0; right: 0; top: 912px; text-align: center; font-size: 46px; letter-spacing: .32em; color: rgba(255,255,255,.86); font-weight: 500; }
+  #line1 { position: absolute; left: 50%; top: 1010px; height: 4px; background: var(--red); transform: translateX(-50%); width: 0; }
+
+  /* S2 */
+  #s2 .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,8,10,.9) 0%, rgba(8,8,10,.78) 34%, rgba(8,8,10,.35) 58%, rgba(8,8,10,0) 78%); }
+  #s2 h1 { position: absolute; left: 130px; top: 360px; font-size: 128px; line-height: 1.18; font-weight: 700; text-shadow: 0 6px 30px rgba(0,0,0,.55); }
+  #s2 h1 span { display: block; overflow: hidden; padding-bottom: 12px; }
+  #s2 h1 span b { display: block; font-weight: 700; }
+  #s2 h1 span.r b { color: var(--red); }
+  #bar2 { position: absolute; left: 134px; top: 700px; height: 8px; width: 0; background: var(--red); border-radius: 4px; }
+  .pill { position: absolute; display: inline-block; padding: 14px 30px; border-radius: 999px; background: var(--red); font-weight: 600; font-size: 34px; letter-spacing: .02em; }
+  #pill2 { left: 134px; top: 250px; }
+  #sub2 { position: absolute; left: 134px; bottom: 90px; font-size: 34px; letter-spacing: .26em; color: rgba(255,255,255,.8); font-family: 'Poppins', sans-serif; }
+
+  /* S3 */
+  #s3 { background: linear-gradient(135deg, #5d0a17 0%, #240609 70%, #130406 100%); }
+  #card3 { position: absolute; left: 130px; top: 90px; width: 640px; height: 900px; border-radius: 22px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.55); border: 10px solid #fff; background: #000; }
+  #card3 .bgimg { inset: 0; }
+  #h3 { position: absolute; left: 880px; top: 80px; font-size: 92px; font-weight: 700; line-height: 1.2; }
+  #h3 small { display: block; font-size: 38px; font-weight: 500; color: rgba(255,255,255,.75); margin-top: 6px; letter-spacing: .04em; }
+  #list3 { position: absolute; left: 880px; top: 300px; width: 900px; }
+  .svc { display: flex; align-items: center; gap: 26px; height: 78px; margin-bottom: 12px; padding: 0 30px; border-radius: 16px; background: linear-gradient(90deg, var(--red), #c20f29); font-size: 40px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .svc i { font-style: normal; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.22); font-size: 28px; font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+  /* S4 */
+  #s4 { background: #000; }
+  .shot { position: absolute; inset: 0; opacity: 0; overflow: hidden; }
+  .shot .blur { position: absolute; inset: -10%; background-size: cover; background-position: center; filter: blur(40px) brightness(.55) saturate(1.2); }
+  .shot .cardimg { position: absolute; left: 580px; top: 90px; width: 760px; height: 900px; background-size: cover; background-position: center; border-radius: 18px; box-shadow: 0 40px 100px rgba(0,0,0,.6); }
+  .lower { position: absolute; left: 0; bottom: 110px; display: flex; align-items: stretch; }
+  .lower .tagr { background: var(--red); padding: 22px 44px 22px 130px; font-size: 38px; font-weight: 600; }
+  .lower .tt { background: rgba(8,8,10,.82); padding: 22px 60px 22px 36px; font-size: 52px; font-weight: 700; }
+  #ctr4 { position: absolute; right: 90px; top: 70px; font-size: 44px; font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: .12em; }
+  #ctr4 em { color: var(--red); font-style: normal; }
+
+  /* S5 */
+  #s5 .shade { position: absolute; inset: 0; background: rgba(8,8,10,.78); }
+  .stat { position: absolute; top: 330px; width: 560px; text-align: center; }
+  .stat b { display: block; font-size: 196px; line-height: 1; font-weight: 800; font-family: 'Poppins', 'Hind Siliguri', sans-serif; }
+  .stat b em { color: var(--red); font-style: normal; }
+  .stat span { display: block; margin-top: 22px; font-size: 52px; font-weight: 600; color: rgba(255,255,255,.9); }
+  .stat u { display: block; margin: 26px auto 0; height: 6px; width: 0; background: var(--red); border-radius: 3px; }
+  #h5 { position: absolute; left: 0; right: 0; top: 110px; text-align: center; font-size: 62px; font-weight: 600; letter-spacing: .06em; color: rgba(255,255,255,.88); }
+
+  /* S6 */
+  #s6 { background: linear-gradient(135deg, #e41431 0%, #8e0b1f 100%); }
+  #s6 .plate { position: absolute; left: 50%; top: 80px; transform: translateX(-50%); }
+  #h6 { position: absolute; left: 0; right: 0; top: 440px; text-align: center; font-size: 100px; font-weight: 700; }
+  #ph6 { position: absolute; left: 0; right: 0; top: 620px; text-align: center; font-size: 130px; font-weight: 800; font-family: 'Poppins', sans-serif; letter-spacing: .04em; }
+  #em6, #ad6 { position: absolute; left: 0; right: 0; text-align: center; font-size: 44px; font-weight: 500; }
+  #em6 { top: 820px; }
+  #ad6 { top: 898px; color: rgba(255,255,255,.92); }
+
+  /* diagonal wipe (the logo's slashes) */
+  #wipe { position: absolute; top: -10%; bottom: -10%; left: 0; width: 2496px; background: var(--red); transform: translateX(-2900px) skewX(-22deg); z-index: 20; box-shadow: 0 0 120px rgba(0,0,0,.5); }
+  #wipe2 { position: absolute; top: -10%; bottom: -10%; left: 0; width: 346px; background: #fff; transform: translateX(-4200px) skewX(-22deg); z-index: 21; }
+  #fadeout { position: absolute; inset: 0; background: #000; opacity: 0; z-index: 30; }
+  #lines { position: absolute; inset: 0; z-index: 25; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- S1: logo reveal -->
+  <div class="scene" id="s1">
+    <div class="grid"></div>
+    <svg id="house" viewBox="0 0 440 380">
+      <path id="hRoofFill" d="M20 170 L220 24 L420 170 Z" style="fill: rgba(228,20,49,.16); stroke: none"/>
+      <path id="hRoof" pathLength="1" d="M20 170 L220 24 L420 170" style="stroke: #e41431; stroke-width: 14"/>
+      <path id="hWall" pathLength="1" d="M70 150 V356 H370 V150" style="stroke: #fff; stroke-width: 10"/>
+      <path id="hWin" pathLength="1" d="M130 214 h78 v78 h-78 z M169 214 v78 M130 253 h78" style="stroke: #fff; stroke-width: 7"/>
+      <path id="hDoor" pathLength="1" d="M262 356 V250 h66 V356" style="stroke: #e41431; stroke-width: 9"/>
+    </svg>
+    <div class="plate" id="plate1"><img src="file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/assets/img/logo.png"></div>
+    <div id="tag1">আর্কিটেকচার ও ইঞ্জিনিয়ারিং সেবা</div>
+    <div id="line1"></div>
+    <div class="vig"></div>
+  </div>
+
+  <!-- S2: hero render -->
+  <div class="scene" id="s2">
+    <div class="bgimg" id="img2" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-12.jpg')"></div>
+    <div class="shade"></div>
+    <div class="pill" id="pill2">৩ডি ও ল্যান্ডস্কেপ ডিজাইন</div>
+    <h1 id="h2"><span><b>নির্মাণের আগেই দেখুন</b></span><span class="r"><b>আপনার স্বপ্নের ভবন</b></span></h1>
+    <div id="bar2"></div>
+    <div id="sub2">ADNAN ARCHITECTS &amp; ENGINEERS</div>
+    <div class="vig"></div>
+  </div>
+
+  <!-- S3: services -->
+  <div class="scene" id="s3">
+    <div class="grid"></div>
+    <div id="card3"><div class="bgimg" id="img3" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-07.jpg')"></div></div>
+    <div id="h3">আমাদের সেবাসমূহ<small>এক ছাদের নিচে সব সেবা</small></div>
+    <div id="list3"></div>
+    <div class="vig"></div>
+  </div>
+
+  <!-- S4: montage -->
+  <div class="scene" id="s4">
+    <div class="shot" id="shotA"><div class="bgimg" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-05.jpg')"></div></div>
+    <div class="shot" id="shotB"><div class="bgimg" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-08.jpg')"></div></div>
+    <div class="shot" id="shotC"><div class="bgimg" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-02.jpg')"></div></div>
+    <div class="shot" id="shotD"><div class="blur" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-09.jpg')"></div><div class="cardimg" id="imgD" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-09.jpg')"></div></div>
+    <div class="lower" id="lower4"><div class="tagr" id="tag4">৩ডি ও ল্যান্ডস্কেপ ডিজাইন</div><div class="tt" id="tt4">প্রজেক্ট ০১</div></div>
+    <div id="ctr4"><em id="n4">০১</em> / ০৪</div>
+    <div class="vig"></div>
+  </div>
+
+  <!-- S5: numbers -->
+  <div class="scene" id="s5">
+    <div class="bgimg" id="img5" style="background-image:url('file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/uploads/2026/11/3d-landscape-12.jpg'); filter: blur(10px)"></div>
+    <div class="shade"></div>
+    <div id="h5">আমাদের পথচলা</div>
+    <div class="stat" id="st1" style="left: 120px"><b><span id="v1" style="display:inline;font-size:inherit;margin:0;font-weight:inherit;color:#fff">০</span></b><span>সম্পন্ন প্রজেক্ট</span><u></u></div>
+    <div class="stat" id="st2" style="left: 680px"><b><span id="v2" style="display:inline;font-size:inherit;margin:0;font-weight:inherit;color:#fff">০</span></b><span>ধরনের সেবা</span><u></u></div>
+    <div class="stat" id="st3" style="left: 1240px"><b><span id="v3" style="display:inline;font-size:inherit;margin:0;font-weight:inherit;color:#fff">০</span></b><span>সন্তুষ্ট ক্লায়েন্ট</span><u></u></div>
+    <div class="vig"></div>
+  </div>
+
+  <!-- S6: call to action -->
+  <div class="scene" id="s6">
+    <div class="grid"></div>
+    <div class="plate" id="plate6"><img src="file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/assets/img/logo.png" style="width:400px"></div>
+    <div id="h6">আপনার প্রজেক্ট নিয়ে কথা বলুন</div>
+    <div id="ph6">01511092580</div>
+    <div id="em6">anik.ph7@gmail.com</div>
+    <div id="ad6">২৯৩ আলী আহাম্মদ চুনকা রোড, কে. কে. টাওয়ার, বন্দর, নারায়ণগঞ্জ</div>
+    <div class="vig"></div>
+  </div>
+
+  <div id="wipe"></div><div id="wipe2"></div>
+  <div class="grain"></div>
+  <div id="fadeout"></div>
+</div>
+
+<script src="file:///D:/ProjectsPath/Adnan-Architect-and-Engineers/public/assets/vendor/gsap.min.js"></script>
+<script>
+  const DUR = 56;
+  const bn = (n) => Math.round(n).toLocaleString('bn-BD', { useGrouping: false });
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
+  window.TL = tl; window.DUR = DUR;
+
+  // services list
+  const SVC = ['আর্কিটেকচারাল ড্রয়িং', 'স্ট্রাকচারাল ড্রয়িং', 'ইলেকট্রিক্যাল ড্রয়িং', 'প্লাম্বিং ও ফায়ারফাইটিং', 'রাজউক, পৌরসভা ও উপজেলা প্ল্যান', 'সয়েল টেস্ট', '3D ও ল্যান্ডস্কেপ ডিজাইন', 'ইন্টেরিয়র ডিজাইন'];
+  document.getElementById('list3').innerHTML = SVC.map((s, i) => `<div class="svc"><i>${i + 1}</i><span>${s}</span></div>`).join('');
+
+  const show = (sel, a, b) => { tl.set(sel, { opacity: 1 }, a); tl.set(sel, { opacity: 0 }, b); };
+
+  // ---- the slash wipe: covers the screen at 'mid', the scene swap happens under it
+  const wipe = (mid) => {
+    tl.fromTo('#wipe', { x: -2900 }, { x: 2200, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, mid - 0.55);
+    tl.fromTo('#wipe2', { x: -384 }, { x: 4716, duration: 1.1, ease: 'power2.inOut', immediateRender: false }, mid - 0.55);
+  };
+
+  // ============ S1  0 - 6.2 : logo reveal
+  show('#s1', 0, 6.2);
+  tl.fromTo('#hRoof', { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.4);
+  tl.fromTo('#hWall', { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.0, ease: 'power2.inOut' }, 0.9);
+  tl.fromTo('#hWin', { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .8, ease: 'power2.inOut' }, 1.5);
+  tl.fromTo('#hDoor', { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .8, ease: 'power2.inOut' }, 1.7);
+  tl.fromTo('#hRoofFill', { opacity: 0 }, { opacity: 1, duration: .8 }, 1.6);
+  tl.fromTo('#plate1', { opacity: 0, y: 40, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: 'power3.out' }, 2.3);
+  tl.fromTo('#tag1', { opacity: 0, y: 24, letterSpacing: '.6em' }, { opacity: 1, y: 0, letterSpacing: '.32em', duration: 1.3 }, 3.1);
+  tl.fromTo('#line1', { width: 0 }, { width: 520, duration: 1.1, ease: 'power3.inOut' }, 3.4);
+  tl.fromTo('#house', { y: 0, scale: 1 }, { y: -12, scale: 1.04, duration: 5.6, ease: 'none' }, 0.4);
+  wipe(6.2);
+
+  // ============ S2  6.2 - 14.4 : hero render (slow push-in)
+  show('#s2', 6.2, 14.6);
+  tl.fromTo('#img2', { scale: 1.0, x: 0 }, { scale: 1.14, x: -40, duration: 8.6, ease: 'none' }, 6.2);
+  tl.fromTo('#pill2', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: .8 }, 7.0);
+  tl.fromTo('#h2 span:nth-child(1) b', { yPercent: 110 }, { yPercent: 0, duration: 1.0, ease: 'power3.out' }, 7.3);
+  tl.fromTo('#h2 span:nth-child(2) b', { yPercent: 110 }, { yPercent: 0, duration: 1.0, ease: 'power3.out' }, 7.8);
+  tl.fromTo('#bar2', { width: 0 }, { width: 560, duration: 1.0, ease: 'power3.inOut' }, 8.6);
+  tl.fromTo('#sub2', { opacity: 0 }, { opacity: 1, duration: 1.0 }, 9.2);
+  tl.to('#h2, #pill2, #sub2, #bar2', { opacity: 0, duration: .5 }, 13.7);
+  wipe(14.6);
+
+  // ============ S3  14.6 - 26.4 : services
+  show('#s3', 14.6, 26.6);
+  tl.fromTo('#img3', { scale: 1.0 }, { scale: 1.16, duration: 12, ease: 'none' }, 14.6);
+  tl.fromTo('#card3', { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 1.0, ease: 'power3.out' }, 15.3);
+  tl.fromTo('#h3', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.0 }, 15.6);
+  SVC.forEach((_, i) => tl.fromTo(`.svc:nth-child(${i + 1})`, { opacity: 0, x: 140 }, { opacity: 1, x: 0, duration: .7, ease: 'power3.out' }, 16.4 + i * 0.62));
+  wipe(26.6);
+
+  // ============ S4  26.6 - 38.4 : montage, four shots, slashes between them
+  show('#s4', 26.6, 38.6);
+  const shots = [['#shotA', 27.0, 30.0, { scale: 1.02 }, { scale: 1.16 }], ['#shotB', 30.0, 33.0, { scale: 1.12, x: 60 }, { scale: 1.12, x: -60 }], ['#shotC', 33.0, 36.0, { scale: 1.16 }, { scale: 1.02 }], ['#shotD', 36.0, 38.6, { scale: 1.0 }, { scale: 1.1 }]];
+  shots.forEach(([sel, a, b, from, to], i) => {
+    show(sel, i === 0 ? 26.6 : a, i === shots.length - 1 ? 38.6 : b);
+    const target = sel === '#shotD' ? '#imgD' : sel + ' .bgimg';
+    tl.fromTo(target, from, { ...to, duration: b - a + 0.6, ease: 'none' }, a);
+  });
+  [30.0, 33.0, 36.0].forEach((m) => wipe(m));
+  tl.fromTo('#lower4', { x: -700, opacity: 0 }, { x: 0, opacity: 1, duration: .9, ease: 'power3.out' }, 27.6);
+  tl.fromTo('#ctr4', { opacity: 0 }, { opacity: 1, duration: .6 }, 27.6);
+  ['প্রজেক্ট ০২', 'প্রজেক্ট ০৩', 'প্রজেক্ট ০৪'].forEach((txt, i) => {
+    const m = [30.0, 33.0, 36.0][i];
+    tl.set('#tt4', { textContent: txt }, m);
+    tl.set('#n4', { textContent: bn(i + 2).replace(/^/, '০') }, m);
+    tl.fromTo('#lower4', { x: -300, opacity: 0.2 }, { x: 0, opacity: 1, duration: .7, ease: 'power3.out' }, m + 0.3);
+  });
+  wipe(38.6);
+
+  // ============ S5  38.6 - 44.6 : numbers
+  show('#s5', 38.6, 44.8);
+  tl.fromTo('#img5', { scale: 1.0 }, { scale: 1.1, duration: 6.4, ease: 'none' }, 38.6);
+  tl.fromTo('#h5', { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: .9 }, 39.4);
+  const counter = (id, end, suffix, at) => {
+    const o = { v: 0 };
+    tl.fromTo(id.replace('v', 'st'), { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out' }, at);
+    tl.to(o, { v: end, duration: 2.0, ease: 'power2.out', onUpdate: () => { document.querySelector(id).innerHTML = bn(o.v) + (suffix ? `<em>${suffix}</em>` : ''); } }, at + 0.2);
+    tl.fromTo(id.replace('#v', '#st') + ' u', { width: 0 }, { width: 220, duration: 1.0, ease: 'power3.inOut' }, at + 1.0);
+  };
+  counter('#v1', 1500, '+', 39.9);
+  counter('#v2', 8, '', 40.6);
+  counter('#v3', 1500, '+', 41.3);
+  wipe(44.8);
+
+  // ============ S6  44.8 - 51 : call to action
+  show('#s6', 44.8, 56.2);
+  tl.fromTo('#plate6', { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, 45.4);
+  tl.fromTo('#h6', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.0 }, 46.1);
+  tl.fromTo('#ph6', { opacity: 0, scale: .9 }, { opacity: 1, scale: 1, duration: 1.0, ease: 'back.out(1.6)' }, 46.9);
+  tl.fromTo('#em6', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .8 }, 47.8);
+  tl.fromTo('#ad6', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .8 }, 48.2);
+  tl.fromTo('#ph6', { textShadow: '0 0 0 rgba(255,255,255,0)' }, { textShadow: '0 0 40px rgba(255,255,255,.55)', duration: 1.2, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 48.0);
+  tl.fromTo('#fadeout', { opacity: 1 }, { opacity: 0, duration: 0.9, ease: 'none' }, 0);                                  // fade in from black
+  tl.fromTo('#fadeout', { opacity: 0 }, { opacity: 1, duration: 1.0, ease: 'none', immediateRender: false }, 55.0);       // fade to black
+  tl.set({}, {}, DUR);
+
+  window.seek = (t) => { tl.time(t, false); };
+</script>
+</body>
+</html>

@@ -9,10 +9,23 @@
       <div data-blob class="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-brand-100/70"></div>
       <div class="relative mx-auto max-w-7xl px-4 py-16 lg:py-24">
         <nav data-ph class="text-sm text-gray-500"><a href="/" class="hover:text-brand-600">হোম</a> <span
-            class="mx-2">/</span> <span class="text-ink-800">আমাদের কাজ</span></nav>
-        <h1 data-ph class="mt-4 text-4xl sm:text-5xl font-bold leading-[1.4]">আমাদের <span class="text-gradient">কাজ</span></h1>
-        <p data-ph class="mt-4 max-w-2xl text-gray-600 text-lg">ফ্লোর প্ল্যান, ড্রইং ও ৩ডি ডিজাইনের নমুনা। যেকোনো প্রজেক্টে ক্লিক করে সব ছবি ও
+            class="mx-2">/</span>
+          <template x-if="!status"><span class="text-ink-800">আমাদের কাজ</span></template>
+          <template x-if="status"><span><a href="/portfolio" class="hover:text-brand-600">আমাদের কাজ</a> <span class="mx-2">/</span> <span class="text-ink-800" x-text="WORK[status].label"></span></span></template></nav>
+        <h1 data-ph class="mt-4 text-4xl sm:text-5xl font-bold leading-[1.4]">
+          <template x-if="!status"><span>আমাদের <span class="text-gradient">কাজ</span></span></template>
+          <template x-if="status"><span class="text-gradient" x-text="WORK[status].title"></span></template>
+        </h1>
+        <p data-ph class="mt-4 max-w-2xl text-gray-600 text-lg" x-show="status" x-text="status && WORK[status].text"></p>
+        <p data-ph class="mt-4 max-w-2xl text-gray-600 text-lg" x-show="!status">ফ্লোর প্ল্যান, ড্রয়িং ও ৩ডি ডিজাইনের নমুনা। যেকোনো প্রজেক্টে ক্লিক করে সব ছবি ও
           বিস্তারিত দেখুন।</p>
+        <!-- main categories -->
+        <div class="sx-worktabs sx-worktabs--page mt-8" role="tablist">
+          <a href="/portfolio" :class="!status && 'is-on'"><span class="sx-worktabs-dot all"></span><span x-text="t('সব')"></span></a>
+          <template x-for="st in ['completed', 'running']" :key="st">
+            <a :href="WORK[st].url" :class="status === st && 'is-on'"><span class="sx-worktabs-dot" :class="st"></span><span x-text="WORK[st].label"></span><em x-text="num(WORK[st].count)"></em></a>
+          </template>
+        </div>
       </div>
     </section>
 
@@ -26,6 +39,7 @@
           </template>
         </div>
 
+        <p class="sx-works-empty sx-works-empty--light" x-show="!filtered.length" x-cloak x-text="t('এই বিভাগে এখনো কোনো প্রজেক্ট নেই — শীঘ্রই আসছে।')"></p>
         <div x-ref="grid" class="mt-8 grid md:grid-cols-2 gap-6">
           <template x-for="p in filtered" :key="p.slug">
             <a :href="'/project/' + p.slug" data-card
@@ -39,10 +53,12 @@
                 <div class="flex flex-wrap gap-2">
                   <span class="text-xs font-medium rounded-full bg-brand-600 px-3 py-1" x-text="p.category"></span>
                   <span class="text-xs font-medium rounded-full bg-white/15 backdrop-blur px-3 py-1"
-                    x-text="num(p.images.length) + t('টি ড্রইং')"></span>
+                    x-text="num(p.images.length) + t('টি ড্রয়িং')"></span>
+                  <span x-show="p.status === 'running'" class="sx-run-chip"><i></i><span x-text="t('চলমান')"></span></span>
                 </div>
                 <h2 class="mt-3 text-xl sm:text-2xl font-bold leading-snug" x-text="p.title"></h2>
                 <p class="mt-1 text-sm text-gray-300" x-text="p.tagline"></p>
+                <div class="sx-prog" x-show="p.status === 'running' && p.progress !== null"><div><i :style="'width:' + p.progress + '%'"></i></div><span x-text="num(p.progress) + '%'"></span></div>
                 <span
                   class="mt-5 inline-flex items-center gap-2 text-sm font-semibold group-hover:gap-4 transition-all">বিস্তারিত
                   দেখুন <span>→</span></span>
@@ -76,12 +92,15 @@
 @endsection
 
 @push('scripts')
+<script>window.PORTFOLIO_STATUS = @json($status ?? null);</script>
 @verbatim
 <script>
     function portfolio() {
       return {
         filter: t('সব'),
-        projects: window.PROJECTS,
+        status: window.PORTFOLIO_STATUS || null,
+        WORK: window.WORK || {},
+        get projects() { return this.status ? window.PROJECTS.filter(p => p.status === this.status) : window.PROJECTS; },
         get categories() { return [t('সব'), ...new Set(this.projects.map(p => p.category))]; },
         get filtered() { return this.filter === t('সব') ? this.projects : this.projects.filter(p => p.category === this.filter); },
         setFilter(c) {

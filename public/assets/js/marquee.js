@@ -5,7 +5,10 @@
 (function () {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  let token = 0;   // a new page starts a new loop; the old loop notices and stops
+
   function start() {
+    const my = ++token;
     const tracks = Array.from(document.querySelectorAll('[data-marquee]'));
     if (!tracks.length) return;
 
@@ -17,6 +20,7 @@
     if (reduce) return;
 
     (function tick() {
+      if (my !== token || !tracks[0].isConnected) return;
       const y = window.scrollY;
       boost = boost * .92 + Math.abs(y - lastY) * .08;       // smoothed scroll speed (px/frame)
       lastY = y;
@@ -31,7 +35,8 @@
     })();
   }
 
-  // wait a frame so Alpine has rendered the x-for list
+  // wait a frame so Alpine has rendered the x-for list; with Turbo it runs after every page visit too
   const go = () => requestAnimationFrame(start);
-  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', go) : go();
+  if (document.querySelector('script[src*="turbo"]')) document.addEventListener('turbo:load', go);
+  else document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', go) : go();
 })();

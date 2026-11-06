@@ -22,11 +22,14 @@ class SiteController extends Controller
         ]);
     }
 
-    public function portfolio()
+    /** Our Work: all projects, or one of the two main categories (completed / running). */
+    public function portfolio(?string $status = null)
     {
+        $work = $status ? SiteData::work(app()->getLocale())[$status] : null;
+
         return $this->render('portfolio', 'portfolio', Page::where('key', 'portfolio')->first()?->seo, [
-            'title' => __('site.portfolio'), 'description' => __('site.portfolio_desc'),
-        ]);
+            'title' => $work['title'] ?? __('site.portfolio'), 'description' => $work['text'] ?? __('site.portfolio_desc'),
+        ], ['status' => $status]);
     }
 
     public function project(string $slug)
@@ -88,7 +91,7 @@ class SiteController extends Controller
     {
         abort_unless(Setting::get('seo_sitemap_enabled', true), 404);
 
-        $urls = [['loc' => url('/'), 'mod' => null, 'prio' => '1.0'], ['loc' => url('/portfolio'), 'mod' => null, 'prio' => '0.8'], ['loc' => url('/insights'), 'mod' => null, 'prio' => '0.8']];
+        $urls = [['loc' => url('/'), 'mod' => null, 'prio' => '1.0'], ['loc' => url('/portfolio'), 'mod' => null, 'prio' => '0.8'], ['loc' => url('/portfolio/completed'), 'mod' => null, 'prio' => '0.8'], ['loc' => url('/portfolio/running'), 'mod' => null, 'prio' => '0.7'], ['loc' => url('/insights'), 'mod' => null, 'prio' => '0.8']];
         foreach (Project::where('active', true)->with('seo')->get() as $p) {
             if ($p->seo?->robots_index ?? true) {
                 $urls[] = ['loc' => url('/project/'.$p->slug), 'mod' => $p->updated_at, 'prio' => '0.7'];

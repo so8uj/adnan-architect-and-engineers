@@ -2,11 +2,11 @@
  "bn": {
   "SITE": {
    "name": "Adnan Architects & Engineers",
-   "phone": "01673092580",
-   "email": "anik.p.h7@gmail.com",
-   "address": "২৯৩, কে.কে টাওয়ার (গ্রাউন্ড ফ্লোর), বন্দর, নারায়ণগঞ্জ-১৪১০",
+   "phone": "01511092580",
+   "email": "anik.ph7@gmail.com",
+   "address": "২৯৩ আলী আহাম্মদ চুনকা রোড, কে. কে. টাওয়ার, বন্দর, নারায়ণগঞ্জ",
    "facebook": "https://www.facebook.com/adnanarchitectsandengineers/",
-   "whatsapp": "8801673092580",
+   "whatsapp": "8801511092580",
    "messenger": "adnanarchitectsandengineers",
    "preloader": {
     "show": true,
@@ -32,7 +32,7 @@
     "badge": "সম্পূর্ণ আর্কিটেকচার ও ইঞ্জিনিয়ারিং সেবা",
     "title1": "আপনার স্বপ্নের ভবন,",
     "title2": "নিখুঁত নকশায়",
-    "text": "সয়েল টেস্ট থেকে শুরু করে আর্কিটেকচারাল, স্ট্রাকচারাল ড্রইং, 3D মডেল এবং রাজউক, পৌরসভা ও উপজেলা প্ল্যান পাস — সব এক ছাদের নিচে।",
+    "text": "সয়েল টেস্ট থেকে শুরু করে আর্কিটেকচারাল, স্ট্রাকচারাল ড্রয়িং, 3D মডেল এবং রাজউক, পৌরসভা ও উপজেলা প্ল্যান পাস — সব এক ছাদের নিচে।",
     "image": "assets/img/cover.jpg",
     "pos": "center",
     "cta": {
@@ -46,7 +46,7 @@
     }
    },
    {
-    "badge": "আর্কিটেকচারাল ড্রইং",
+    "badge": "আর্কিটেকচারাল ড্রয়িং",
     "title1": "প্লটের মাপে সাজানো,",
     "title2": "কার্যকর ফ্লোর প্ল্যান",
     "text": "বেডরুম, কিচেন, ডাইনিং ও সিঁড়ির সুসংগত বিন্যাস — প্রতিটি ঘরের মাপসহ স্পষ্ট ডাইমেনশন, কলাম ও গ্রিড বিবেচনা করে।",
@@ -58,7 +58,7 @@
     },
     "chip": {
      "icon": "📐",
-     "title": "মাপসহ স্পষ্ট ড্রইং",
+     "title": "মাপসহ স্পষ্ট ড্রয়িং",
      "sub": "ছোট ও মাঝারি প্লটের জন্য"
     }
    },
@@ -108,7 +108,7 @@
     "meta": [
      {
       "label": "সেবা",
-      "value": "আর্কিটেকচারাল ড্রইং"
+      "value": "আর্কিটেকচারাল ড্রয়িং"
      },
      {
       "label": "ধরন",
@@ -119,7 +119,7 @@
       "value": "২ডি ফ্লোর প্ল্যান"
      },
      {
-      "label": "ড্রইং সংখ্যা",
+      "label": "ড্রয়িং সংখ্যা",
       "value": "৪টি প্ল্যান"
      }
     ],
@@ -132,14 +132,14 @@
      "প্লটের মাপ অনুযায়ী কাস্টমাইজড লেআউট",
      "প্রতিটি ঘরের মাপসহ স্পষ্ট ডাইমেনশন",
      "কলাম ও স্ট্রাকচারাল গ্রিড বিবেচনা করে নকশা",
-     "ভেরান্ডা, কিচেন ও টয়লেটের সুবিবেচিত অবস্থান"
+     "বারান্দা, কিচেন ও টয়লেটের সুবিবেচিত অবস্থান"
     ],
     "images": [
      {
       "src": "assets/img/portfolio/1/845359739_2198300277768717_6483465518597631330_n.jpg",
       "title": "প্ল্যান ০১",
       "size": "৩৫′-০″ × ৩৩′-০″",
-      "note": "৪টি বেডরুম, ২টি টয়লেট, কিচেন, ডাইনিং, সিঁড়ি ও ২টি ভেরান্ডা।"
+      "note": "৪টি বেডরুম, ২টি টয়লেট, কিচেন, ডাইনিং, সিঁড়ি ও ২টি বারান্দা।"
      },
      {
       "src": "assets/img/portfolio/1/846158923_1798873151304643_8720959401108166983_n.jpg",
@@ -151,13 +151,13 @@
       "src": "assets/img/portfolio/1/846667729_1762916055337733_4979502835278007760_n.jpg",
       "title": "প্ল্যান ০৩ — গ্রাউন্ড ফ্লোর",
       "size": "২৩′-৩″ × ২৭′-৮″",
-      "note": "৩টি বেডরুম, টয়লেট, কিচেন ও ভেরান্ডা — ছোট প্লটের জন্য সাশ্রয়ী নকশা।"
+      "note": "৩টি বেডরুম, টয়লেট, কিচেন ও বারান্দা — ছোট প্লটের জন্য সাশ্রয়ী নকশা।"
      },
      {
       "src": "assets/img/portfolio/1/847920256_1092318597127247_2719636292717576314_n.jpg",
       "title": "প্ল্যান ০৪",
       "size": "২৭′-০″ × ৩০′-০″",
-      "note": "৩টি বেডরুম, ২টি টয়লেট, কিচেন, ডাইনিং, সিঁড়ি ও ভেরান্ডা।"
+      "note": "৩টি বেডরুম, ২টি টয়লেট, কিচেন, ডাইনিং, সিঁড়ি ও বারান্দা।"
      }
     ]
    },
@@ -171,7 +171,7 @@
     "meta": [
      {
       "label": "সেবা",
-      "value": "আর্কিটেকচারাল ড্রইং, ৩ডি মডেল"
+      "value": "আর্কিটেকচারাল ড্রয়িং, ৩ডি মডেল"
      },
      {
       "label": "ধরন",
@@ -183,13 +183,13 @@
      },
      {
       "label": "ডিজাইনার",
-      "value": "Engr. Arif Anik (B.Sc in Civil)"
+      "value": "Engr. Arif Anik (B.Sc. in Civil Engineering)"
      }
     ],
     "summary": "একটি টিপিক্যাল ফ্লোরের দুটি ইউনিট, লিফট, সিঁড়ি ও লবিসহ — ৩ডি দৃশ্যে ঘরের আসবাব, টাইলস ও ব্যালকনি পর্যন্ত বোঝা যায়।",
     "description": [
      "এটি একটি বহুতল আবাসিক ভবনের টিপিক্যাল ফ্লোর প্ল্যানের ৩ডি ভিজ্যুয়ালাইজেশন। প্রতিটি ফ্লোরে দুটি আলাদা ইউনিট রয়েছে, মাঝখানে লিফট, সিঁড়ি ও কমন লবি।",
-     "সাধারণ ২ডি ড্রইংয়ের পাশাপাশি এমন ৩ডি রেন্ডার ক্লায়েন্টকে নির্মাণের আগেই ঘরের মাপ, আসবাবের বিন্যাস ও সার্বিক পরিবেশ স্পষ্ট বুঝতে সাহায্য করে। প্রতিটি রুমের মাপ নকশায় লেখা আছে।"
+     "সাধারণ ২ডি ড্রয়িংয়ের পাশাপাশি এমন ৩ডি রেন্ডার ক্লায়েন্টকে নির্মাণের আগেই ঘরের মাপ, আসবাবের বিন্যাস ও সার্বিক পরিবেশ স্পষ্ট বুঝতে সাহায্য করে। প্রতিটি রুমের মাপ নকশায় লেখা আছে।"
     ],
     "highlights": [
      "প্রতি ইউনিটে বেডরুম ও মাস্টার বেডরুম, কমন ও অ্যাটাচ টয়লেট",
@@ -264,7 +264,7 @@
      {
       "ul": [
        "জমির দলিল ও খতিয়ান",
-       "নামজারি (মিউটেশন) এর কাগজ",
+       "নামজারি (মিউটেশন)-এর কাগজ",
        "হালনাগাদ খাজনার রসিদ",
        "জমির মাপ ও অবস্থানের তথ্য",
        "মালিকের পরিচয়পত্র ও ছবি"
@@ -288,7 +288,7 @@
     "excerpt": "প্রতিটি জমির মাটির ধরন আলাদা। মাটির বহন ক্ষমতা না জেনে ফাউন্ডেশন করা ঝুঁকিপূর্ণ হতে পারে।",
     "body": [
      {
-      "p": "একটি ভবনের পুরো ওজন শেষ পর্যন্ত মাটির উপর এসে পড়ে। মাটি কতটা ভার নিতে পারবে তা না জেনে ফাউন্ডেশন ডিজাইন করলে ভবনের নিরাপত্তা ও টেকসইতা প্রশ্নের মুখে পড়ে।"
+      "p": "একটি ভবনের পুরো ওজন শেষ পর্যন্ত মাটির ওপর এসে পড়ে। মাটি কতটা ভার নিতে পারবে তা না জেনে ফাউন্ডেশন ডিজাইন করলে ভবনের নিরাপত্তা ও টেকসইতা প্রশ্নের মুখে পড়ে।"
      },
      {
       "h": "সয়েল টেস্ট থেকে কী জানা যায়"
@@ -311,16 +311,16 @@
    },
    {
     "slug": "2d-vs-3d-design",
-    "title": "২ডি ড্রইং আর ৩ডি মডেল — কোনটি আপনার দরকার?",
+    "title": "২ডি ড্রয়িং আর ৩ডি মডেল — কোনটি আপনার দরকার?",
     "category": "ডিজাইন",
     "date": "২০২৬-১০-০৫",
     "readTime": "২ মিনিট",
     "cover": "assets/img/portfolio/2/848241205_1410323677902473_3856121514893585785_n.jpg",
     "coverFit": "contain",
-    "excerpt": "২ডি ড্রইং নির্মাণের ভিত্তি, আর ৩ডি মডেল দেয় নির্মাণের আগেই চূড়ান্ত রূপ দেখার সুযোগ। দুটো একসাথে হলে সবচেয়ে ভালো।",
+    "excerpt": "২ডি ড্রয়িং নির্মাণের ভিত্তি, আর ৩ডি মডেল দেয় নির্মাণের আগেই চূড়ান্ত রূপ দেখার সুযোগ। দুটো একসাথে হলে সবচেয়ে ভালো।",
     "body": [
      {
-      "p": "২ডি ফ্লোর প্ল্যান ও ড্রইং দিয়ে ঘরের মাপ, দরজা-জানালা ও স্ট্রাকচারের তথ্য পাওয়া যায় — নির্মাণ ও অনুমোদনের জন্য এগুলোই মূল ভিত্তি।"
+      "p": "২ডি ফ্লোর প্ল্যান ও ড্রয়িং দিয়ে ঘরের মাপ, দরজা-জানালা ও স্ট্রাকচারের তথ্য পাওয়া যায় — নির্মাণ ও অনুমোদনের জন্য এগুলোই মূল ভিত্তি।"
      },
      {
       "h": "৩ডি মডেলের সুবিধা"
@@ -355,13 +355,13 @@
      {
       "ul": [
        "নিরাপদ বের হওয়ার পথ ও সিঁড়ি",
-       "ফায়ার ফাইটিং পাইপ ও পানির সংযোগ",
+       "ফায়ারফাইটিং পাইপ ও পানির সংযোগ",
        "ধোঁয়া ও অগ্নি শনাক্তকরণ ব্যবস্থা",
-       "বিল্ডিং কোড ও নিয়ম মেনে ড্রইং"
+       "বিল্ডিং কোড ও নিয়ম মেনে ড্রয়িং"
       ]
      },
      {
-      "p": "বিস্তারিত প্রয়োজনীয়তা ভবনের উচ্চতা ও ব্যবহারের ধরন অনুযায়ী আলাদা হয়, তাই অভিজ্ঞ ইঞ্জিনিয়ারকে দিয়ে ড্রইং করানো উচিত।"
+      "p": "বিস্তারিত প্রয়োজনীয়তা ভবনের উচ্চতা ও ব্যবহারের ধরন অনুযায়ী আলাদা হয়, তাই অভিজ্ঞ ইঞ্জিনিয়ারকে দিয়ে ড্রয়িং করানো উচিত।"
      }
     ]
    },
@@ -445,66 +445,61 @@
   ],
   "STATS": [
    {
-    "value": 500,
+    "value": 1500,
     "suffix": "+",
     "label": "সম্পন্ন প্রজেক্ট"
    },
    {
-    "value": 9,
+    "value": 8,
     "suffix": "",
     "label": "ধরনের সেবা"
    },
    {
-    "value": 100,
-    "suffix": "%",
-    "label": "ক্লায়েন্ট সন্তুষ্টি"
+    "value": 1500,
+    "suffix": "+",
+    "label": "সন্তুষ্ট ক্লায়েন্ট"
    }
   ],
   "SERVICES": [
+   {
+    "title": "আর্কিটেকচারাল ড্রয়িং",
+    "icon": "arch",
+    "desc": "আপনার প্রয়োজন ও জমি অনুযায়ী সুন্দর, কার্যকর ও আধুনিক ফ্লোর প্ল্যান ও এলিভেশন।"
+   },
+   {
+    "title": "স্ট্রাকচারাল ড্রয়িং",
+    "icon": "struct",
+    "desc": "কোড অনুযায়ী নিরাপদ ও সাশ্রয়ী স্ট্রাকচারাল ডিজাইন ও ডিটেইলিং।"
+   },
+   {
+    "title": "ইলেকট্রিক্যাল ড্রয়িং",
+    "icon": "elec",
+    "desc": "ভবনের বৈদ্যুতিক লোড, ওয়্যারিং ও ডিস্ট্রিবিউশনের নির্ভুল ড্রয়িং।"
+   },
+   {
+    "title": "প্লাম্বিং ও ফায়ারফাইটিং",
+    "icon": "fire",
+    "desc": "পানি সরবরাহ, নিষ্কাশন ও ফায়ারফাইটিং ব্যবস্থার প্রয়োজনীয় ড্রয়িং।"
+   },
+   {
+    "title": "রাজউক প্ল্যান, পৌরসভা প্ল্যান ও উপজেলা প্ল্যান",
+    "icon": "rajuk",
+    "desc": "রাজউক, পৌরসভা ও উপজেলা — সব ধরনের প্ল্যান অনুমোদনের কাগজপত্র ও আবেদন।"
+   },
    {
     "title": "সয়েল টেস্ট",
     "icon": "soil",
     "desc": "নিরাপদ ফাউন্ডেশন ডিজাইনের জন্য নির্ভুল মাটি পরীক্ষা ও রিপোর্ট।"
    },
    {
-    "title": "আর্কিটেকচারাল ড্রইং",
-    "icon": "arch",
-    "desc": "আপনার প্রয়োজন ও জমি অনুযায়ী সুন্দর, কার্যকর ও আধুনিক ফ্লোর প্ল্যান ও এলিভেশন।"
-   },
-   {
-    "title": "স্ট্রাকচারাল ড্রইং",
-    "icon": "struct",
-    "desc": "কোড অনুযায়ী নিরাপদ ও সাশ্রয়ী স্ট্রাকচারাল ডিজাইন ও ডিটেইলিং।"
-   },
-   {
-    "title": "ইলেকট্রিক্যাল, প্ল্যাম্বিং ড্রইং",
-    "icon": "elec",
-    "desc": "বৈদ্যুতিক লেআউট, পানি সরবরাহ ও স্যানিটারি ড্রইং।"
-   },
-   {
-    "title": "ফায়ার ফাইটিং ড্রইং",
-    "icon": "fire",
-    "desc": "অগ্নি নিরাপত্তা বিধি মেনে ফায়ার ফাইটিং সিস্টেমের ডিজাইন।"
-   },
-   {
-    "title": "ইন্টেরিয়র, এক্সটেরিয়র ডিজাইন",
-    "icon": "design",
-    "desc": "ভেতর ও বাইরের সৌন্দর্য বাড়াতে নান্দনিক ডিজাইন সলিউশন।"
-   },
-   {
-    "title": "থ্রিডি মডেল",
+    "title": "3D ও ল্যান্ডস্কেপ ডিজাইন",
     "icon": "cube",
-    "desc": "নির্মাণের আগেই দেখে নিন বাস্তবসম্মত 3D রেন্ডার ও ওয়াকথ্রু।"
+    "desc": "বাস্তবসম্মত 3D রেন্ডার ও ল্যান্ডস্কেপ ডিজাইনে নির্মাণের আগেই ভবনের রূপ দেখুন।"
    },
    {
-    "title": "রাজউক প্ল্যান পাস",
-    "icon": "rajuk",
-    "desc": "রাজউক (RAJUK) এলাকায় নকশা অনুমোদনের সম্পূর্ণ প্রক্রিয়া।"
-   },
-   {
-    "title": "সিটি, পৌরসভা ও উপজেলা প্ল্যান পাস",
-    "icon": "city",
-    "desc": "সিটি কর্পোরেশন, পৌরসভা ও উপজেলা পর্যায়ে প্ল্যান অনুমোদন সহায়তা।"
+    "title": "ইন্টেরিয়র ডিজাইন",
+    "icon": "design",
+    "desc": "বাসা ও অফিসের জন্য রুচিসম্মত ও কার্যকর ইন্টেরিয়র ডিজাইন।"
    }
   ],
   "STEPS": [
@@ -517,8 +512,8 @@
     "desc": "আর্কিটেকচারাল ও 3D ডিজাইন তৈরি এবং আপনার মতামত অনুযায়ী পরিমার্জন।"
    },
    {
-    "title": "ড্রইং ও স্ট্রাকচার",
-    "desc": "স্ট্রাকচারাল, ইলেকট্রিক্যাল, প্লাম্বিং ও ফায়ার ড্রইং সম্পন্ন।"
+    "title": "ড্রয়িং ও স্ট্রাকচার",
+    "desc": "স্ট্রাকচারাল, ইলেকট্রিক্যাল, প্লাম্বিং ও ফায়ার ড্রয়িং সম্পন্ন।"
    },
    {
     "title": "প্ল্যান পাস",
@@ -546,11 +541,11 @@
   "FAQS": [
    {
     "q": "প্ল্যান পাসে কত সময় লাগে?",
-    "a": "এলাকা ও কাগজপত্রের উপর নির্ভর করে। যোগাযোগ করলে আপনার প্রজেক্টের জন্য আনুমানিক সময় জানিয়ে দেওয়া হবে।"
+    "a": "এলাকা ও কাগজপত্রের ওপর নির্ভর করে। যোগাযোগ করলে আপনার প্রজেক্টের জন্য আনুমানিক সময় জানিয়ে দেওয়া হবে।"
    },
    {
     "q": "আপনাদের অফিস কোথায়?",
-    "a": "আমাদের অফিস ২৯৩, কে.কে টাওয়ার (গ্রাউন্ড ফ্লোর), বন্দর, নারায়ণগঞ্জ-১৪১০। আসার আগে ০১৬৭৩০৯২৫৮০ নম্বরে কল করে নিলে ভালো।"
+    "a": "আমাদের অফিস ২৯৩ আলী আহাম্মদ চুনকা রোড, কে. কে. টাওয়ার, বন্দর, নারায়ণগঞ্জ। আসার আগে ০১৫১১০৯২৫৮০ নম্বরে কল করে নিলে ভালো।"
    },
    {
     "q": "কাজ শুরুর আগে পরামর্শ কি ফ্রি?",
@@ -565,11 +560,11 @@
  "en": {
   "SITE": {
    "name": "Adnan Architects & Engineers",
-   "phone": "01673092580",
-   "email": "anik.p.h7@gmail.com",
-   "address": "293, K.K Tower (Ground Floor), Bandar, Narayanganj-1410",
+   "phone": "01511092580",
+   "email": "anik.ph7@gmail.com",
+   "address": "293 Ali Ahmad Chunka Road, K. K. Tower, Bandar, Narayanganj",
    "facebook": "https://www.facebook.com/adnanarchitectsandengineers/",
-   "whatsapp": "8801673092580",
+   "whatsapp": "8801511092580",
    "messenger": "adnanarchitectsandengineers",
    "preloader": {
     "show": true,
@@ -580,7 +575,7 @@
    "greeting": "Hello",
    "credit": {
     "show": true,
-    "text": "Design & Developed by",
+    "text": "Designed & Developed by",
     "name": "Sobuj",
     "url": "https://www.facebook.com/so8uj"
    }
@@ -595,7 +590,7 @@
     "badge": "Complete Architecture & Engineering Services",
     "title1": "Your dream building,",
     "title2": "in a flawless design",
-    "text": "From soil testing to architectural and structural drawings, 3D models, and RAJUK, municipality & upazila plan approval — all under one roof.",
+    "text": "From soil testing to architectural and structural drawings, 3D models, and RAJUK, Pourashava & Upazila plan approval — all under one roof.",
     "image": "assets/img/cover.jpg",
     "pos": "center",
     "cta": {
@@ -626,9 +621,9 @@
     }
    },
    {
-    "badge": "3D Visualization",
+    "badge": "3D Visualisation",
     "title1": "See it before it is built,",
-    "title2": "your building, realized",
+    "title2": "your building, realised",
     "text": "Realistic 3D renders let you understand room sizes, furniture layout and the overall feel before construction begins.",
     "image": "assets/img/portfolio/2/848241205_1410323677902473_3856121514893585785_n.jpg",
     "fit": "contain",
@@ -692,7 +687,7 @@
      "While designing, we focused on light and ventilation, easy movement between rooms and making the best use of space, so comfortable living is possible even on a small plot."
     ],
     "highlights": [
-     "Customized layout for the plot size",
+     "Customised layout for the plot size",
      "Clear dimensions for every room",
      "Designed with columns and structural grid in mind",
      "Well-considered placement of verandas, kitchen and toilets"
@@ -726,7 +721,7 @@
    },
    {
     "slug": "typical-floor-plan-3d",
-    "title": "Typical Floor Plan — 3D Visualization",
+    "title": "Typical Floor Plan — 3D Visualisation",
     "category": "3D Floor Plans",
     "tagline": "A two-unit floor of a multi-storey building with lift, in 3D render",
     "cover": "assets/img/portfolio/2/848241205_1410323677902473_3856121514893585785_n.jpg",
@@ -746,12 +741,12 @@
      },
      {
       "label": "Designer",
-      "value": "Engr. Arif Anik (B.Sc in Civil)"
+      "value": "Engr. Arif Anik (B.Sc. in Civil Engineering)"
      }
     ],
     "summary": "Two units of a typical floor with lift, stairs and lobby — the 3D view shows furniture, tiles and balconies.",
     "description": [
-     "This is a 3D visualization of the typical floor plan of a multi-storey residential building. Each floor has two separate units, with a lift, stairs and a common lobby in the middle.",
+     "This is a 3D visualisation of the typical floor plan of a multi-storey residential building. Each floor has two separate units, with a lift, stairs and a common lobby in the middle.",
      "Alongside ordinary 2D drawings, a 3D render like this helps the client clearly understand room sizes, furniture layout and the overall feel before construction. The size of every room is written on the plan."
     ],
     "highlights": [
@@ -918,7 +913,7 @@
      {
       "ul": [
        "Safe exit routes and stairs",
-       "Fire-fighting pipes and water connections",
+       "Firefighting pipes and water connections",
        "Smoke and fire detection systems",
        "Drawings that follow building codes and rules"
       ]
@@ -965,10 +960,10 @@
    "poster": "assets/img/activities/844630106_1125422087116160_4648343664891097974_n.jpg",
    "paragraphs": [
     "We do more than design — our aim is the best use of your land, a safe structure and fast approval.",
-    "From soil testing to plan approval, we are with you at every step. Watch the video to learn about how we work and what we believe in."
+    "From soil testing to plan approval, we are with you at every step. Watch the video to learn how we work and what we believe in."
    ],
    "points": [
-    "Experienced architect & engineer team",
+    "Experienced team of architects & engineers",
     "Reliable design that follows building codes",
     "All services under one roof"
    ],
@@ -1008,27 +1003,22 @@
   ],
   "STATS": [
    {
-    "value": 500,
+    "value": 1500,
     "suffix": "+",
     "label": "Projects completed"
    },
    {
-    "value": 9,
+    "value": 8,
     "suffix": "",
     "label": "Types of service"
    },
    {
-    "value": 100,
-    "suffix": "%",
-    "label": "Client satisfaction"
+    "value": 1500,
+    "suffix": "+",
+    "label": "Satisfied clients"
    }
   ],
   "SERVICES": [
-   {
-    "title": "Soil Test",
-    "icon": "soil",
-    "desc": "Accurate soil testing and reports for safe foundation design."
-   },
    {
     "title": "Architectural Drawing",
     "icon": "arch",
@@ -1040,34 +1030,34 @@
     "desc": "Safe, economical structural design and detailing to code."
    },
    {
-    "title": "Electrical & Plumbing Drawing",
+    "title": "Electrical Drawing",
     "icon": "elec",
-    "desc": "Electrical layout, water supply and sanitary drawings."
+    "desc": "Accurate drawings of the building's electrical load, wiring and distribution."
    },
    {
-    "title": "Fire Fighting Drawing",
+    "title": "Plumbing & Firefighting",
     "icon": "fire",
-    "desc": "Fire-fighting system design that follows fire safety rules."
+    "desc": "The drawings you need for water supply, drainage and the firefighting system."
    },
    {
-    "title": "Interior & Exterior Design",
-    "icon": "design",
-    "desc": "Elegant design solutions to enhance the look inside and out."
-   },
-   {
-    "title": "3D Model",
-    "icon": "cube",
-    "desc": "See realistic 3D renders and walkthroughs before construction."
-   },
-   {
-    "title": "RAJUK Plan Approval",
+    "title": "RAJUK Plan, Pourashava Plan & Upazila Plan",
     "icon": "rajuk",
-    "desc": "The complete design approval process in RAJUK areas."
+    "desc": "RAJUK, Pourashava and Upazila — paperwork and applications for every kind of plan approval."
    },
    {
-    "title": "City, Municipality & Upazila Plan Approval",
-    "icon": "city",
-    "desc": "Help with plan approval at city corporation, municipality and upazila level."
+    "title": "Soil Test",
+    "icon": "soil",
+    "desc": "Accurate soil testing and reports for safe foundation design."
+   },
+   {
+    "title": "3D & Landscape Design",
+    "icon": "cube",
+    "desc": "See your building before it is built, with realistic 3D renders and landscape design."
+   },
+   {
+    "title": "Interior Design",
+    "icon": "design",
+    "desc": "Tasteful, functional interior design for homes and offices."
    }
   ],
   "STEPS": [
@@ -1080,12 +1070,12 @@
     "desc": "Architectural and 3D design, refined with your feedback."
    },
    {
-    "title": "Drawing & Structure",
+    "title": "Drawings & Structure",
     "desc": "Structural, electrical, plumbing and fire drawings completed."
    },
    {
     "title": "Plan Approval",
-    "desc": "Application and approval support at RAJUK / municipality / upazila."
+    "desc": "Application and approval support at RAJUK / Pourashava / Upazila."
    }
   ],
   "WHY": [
@@ -1098,7 +1088,7 @@
     "desc": "Reliable designs that follow building codes and safety."
    },
    {
-    "title": "Realistic 3D visualization",
+    "title": "Realistic 3D visualisation",
     "desc": "See how your building will look before it is built."
    },
    {
@@ -1113,7 +1103,7 @@
    },
    {
     "q": "Where is your office?",
-    "a": "Our office is at 293, K.K Tower (Ground Floor), Bandar, Narayanganj-1410. It is best to call 01673092580 before visiting."
+    "a": "Our office is at 293 Ali Ahmad Chunka Road, K. K. Tower, Bandar, Narayanganj. It is best to call 01511092580 before visiting."
    },
    {
     "q": "Is the consultation free before starting work?",

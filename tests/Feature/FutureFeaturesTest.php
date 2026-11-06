@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Client;
 use App\Models\Setting;
+use App\Models\Role;
 use App\Models\User;
 use App\Support\SiteData;
 use Database\Seeders\SiteSeeder;
@@ -25,11 +26,12 @@ class FutureFeaturesTest extends TestCase
         $this->seed(SiteSeeder::class);
         $this->developer = User::where('is_developer', true)->firstOrFail();
         $this->client = User::create(['name' => 'Client Admin', 'email' => 'client@adnan.test', 'password' => 'password123']);
+        $this->client->forceFill(['role_id' => Role::superAdmin()->id])->save();   // a Super Admin, like every admin before roles existed
     }
 
-    private function switchOn(string $visibleTo = 'developer'): void
+    private function switchOn(): void
     {
-        config(['features.enabled' => true, 'features.modules.clients' => true, 'features.admin_visible_to' => $visibleTo]);
+        config(['features.enabled' => true, 'features.modules.clients' => true]);
         SiteData::flush();
     }
 
@@ -72,27 +74,22 @@ class FutureFeaturesTest extends TestCase
         $this->assertStringNotContainsString('id="clients"', $this->get('/')->getContent());
     }
 
-    public function test_when_on_only_the_developer_sees_the_admin_screens(): void
+    public function test_when_on_every_admin_sees_the_admin_screens(): void
     {
         $this->switchOn();
 
-        $this->actingAs($this->client);
-        $this->get('/admin/c/clients')->assertNotFound();
-        $this->get('/admin/settings/clients')->assertNotFound();
-        $this->get('/admin')->assertDontSee('Client list');
-
-        $this->actingAs($this->developer);
-        $this->get('/admin/c/clients')->assertOk()->assertSee('Search clients');
-        $this->get('/admin/settings/clients')->assertOk();
-        $this->get('/admin')->assertSee('Client list');
+        foreach ([$this->client, $this->developer] as $admin) {
+            $this->actingAs($admin);
+            $this->get('/admin/c/clients')->assertOk()->assertSee('Search clients');
+            $this->get('/admin/settings/clients')->assertOk();
+            $this->get('/admin')->assertSee('Client list');
+        }
     }
 
-    public function test_visible_to_all_lets_every_admin_in(): void
+    public function test_nobody_is_let_in_without_logging_in(): void
     {
-        $this->switchOn('all');
-
-        $this->actingAs($this->client)->get('/admin/c/clients')->assertOk();
-        $this->get('/admin')->assertSee('Client list');
+        $this->switchOn();
+        $this->get('/admin/c/clients')->assertRedirect('/admin/login');
     }
 
     public function test_homepage_shows_only_marked_clients_in_order_and_never_private_data(): void

@@ -46,7 +46,7 @@
   const EN = {
     // ---- titles / meta
     'Adnan Architects & Engineers | আর্কিটেকচার ও ইঞ্জিনিয়ারিং সেবা': 'Adnan Architects & Engineers | Architecture & Engineering Services',
-    'সয়েল টেস্ট, আর্কিটেকচারাল ও স্ট্রাকচারাল ড্রইং, ইলেকট্রিক্যাল ও প্লাম্বিং ড্রইং, 3D মডেল, রাজউক, পৌরসভা ও উপজেলা প্ল্যান পাস।': 'Soil test, architectural & structural drawings, electrical & plumbing drawings, 3D models, and RAJUK, municipality & upazila plan approval.',
+    'আর্কিটেকচারাল, স্ট্রাকচারাল ও ইলেকট্রিক্যাল ড্রয়িং, প্লাম্বিং ও ফায়ারফাইটিং, সয়েল টেস্ট, 3D ও ল্যান্ডস্কেপ ডিজাইন, ইন্টেরিয়র ডিজাইন এবং রাজউক, পৌরসভা ও উপজেলা প্ল্যান।': 'Architectural, structural and electrical drawings, plumbing & firefighting, soil test, 3D & landscape design, interior design, and RAJUK, Pourashava & Upazila plan approval.',
     'আমাদের কাজ | Adnan Architects & Engineers': 'Our Work | Adnan Architects & Engineers',
     'Adnan Architects & Engineers-এর সম্পন্ন প্রজেক্ট, ফ্লোর প্ল্যান ও ৩ডি ডিজাইনের নমুনা।': 'Completed projects, floor plans and 3D design samples by Adnan Architects & Engineers.',
     'প্রজেক্ট | Adnan Architects & Engineers': 'Project | Adnan Architects & Engineers',
@@ -64,22 +64,22 @@
     'কল করুন': 'Call us',
     'প্রজেক্ট শুরু করতে প্রস্তুত?': 'Ready to start your project?',
     'আজই কল করুন বা মেসেজ দিন — আমরা আপনার পাশে আছি।': 'Call or message us today — we are by your side.',
-    'আমাদের অনুসরণ করুন': 'Follow us', 'দ্রুত লিংক': 'Quick links', 'সেবা সমূহ': 'Our services', 'ওপরে যান': 'Back to top', 'ভাষা': 'Language', 'থিম পরিবর্তন': 'Toggle theme',
+    'আমাদের অনুসরণ করুন': 'Follow us', 'দ্রুত লিংক': 'Quick links', 'সেবাসমূহ': 'Our services', 'ওপরে যান': 'Back to top', 'ভাষা': 'Language', 'থিম পরিবর্তন': 'Toggle theme',
 
     // ---- home sections
-    'আমাদের সেবা সমূহ': 'Our Services',
+    'আমাদের সেবাসমূহ': 'Our Services',
     'ভবন নির্মাণের প্রতিটি ধাপে আপনার পাশে': 'By your side at every step of construction',
-    'অভিজ্ঞ আর্কিটেক্ট ও ইঞ্জিনিয়ার টিমের মাধ্যমে প্রয়োজনীয় সব ড্রইং, ডিজাইন ও অনুমোদন সেবা।': 'All the drawings, designs and approval services you need, from an experienced architect and engineer team.',
+    'অভিজ্ঞ আর্কিটেক্ট ও ইঞ্জিনিয়ার টিমের মাধ্যমে প্রয়োজনীয় সব ড্রয়িং, ডিজাইন ও অনুমোদন সেবা।': 'All the drawings, designs and approval services you need, from an experienced team of architects and engineers.',
     'সম্পন্ন প্রজেক্টের নমুনা': 'Samples of completed projects',
-    'যেকোনো প্রজেক্টে ক্লিক করে সব ড্রইং ও বিস্তারিত বিবরণ দেখুন।': 'Click any project to see all drawings and full details.',
+    'যেকোনো প্রজেক্টে ক্লিক করে সব ড্রয়িং ও বিস্তারিত বিবরণ দেখুন।': 'Click any project to see all drawings and full details.',
     'সব প্রজেক্ট দেখুন': 'View all projects', 'বিস্তারিত দেখুন': 'View details',
     'গ্যালারি': 'Gallery', 'আমাদের কার্যক্রম': 'Our Activities',
     'সাইট পরিদর্শন ও কাজের তদারকির নিয়মিত কিছু মুহূর্ত। ছবিতে ক্লিক করে বড় করে দেখুন।': 'Regular moments from site visits and work supervision. Click a photo to enlarge it.',
-    'কিভাবে আমরা কাজ করি': 'How we work',
+    'কীভাবে আমরা কাজ করি': 'How we work',
     'কেন Adnan Architects & Engineers?': 'Why Adnan Architects & Engineers?',
     'আমরা শুধু নকশা করি না — আপনার জমির সর্বোচ্চ ব্যবহার, নিরাপদ স্ট্রাকচার এবং দ্রুত অনুমোদন নিশ্চিত করি।': 'We do more than design — we ensure the best use of your land, a safe structure and fast approval.',
-    'ক্লায়েন্টদের কথা': 'Client Voices', 'যাঁরা আমাদের উপর ভরসা করেছেন': 'People who have trusted us',
-    'আমাদের ক্লায়েন্ট': 'Our Clients', 'যাঁরা আমাদের উপর আস্থা রেখেছেন': 'Trusted by',
+    'ক্লায়েন্টদের কথা': 'Client Voices', 'যাঁরা আমাদের ওপর ভরসা করেছেন': 'People who have trusted us',
+    'আমাদের ক্লায়েন্ট': 'Our Clients', 'যাঁরা আমাদের ওপর আস্থা রেখেছেন': 'Trusted by',
     'নমুনা': 'Sample', 'ভিডিও শীঘ্রই আসছে': 'Video coming soon',
     'জানুন, বুঝুন, সিদ্ধান্ত নিন': 'Learn, understand, decide',
     'প্ল্যান পাস, ডিজাইন ও নির্মাণ নিয়ে দরকারি কিছু লেখা।': 'Some useful reads on plan approval, design and construction.',
@@ -88,7 +88,8 @@
     'আপনার প্রজেক্ট নিয়ে কথা বলুন': 'Talk to us about your project',
     'ফর্মটি পূরণ করুন অথবা সরাসরি কল করুন। আমরা দ্রুত যোগাযোগ করব।': 'Fill in the form or call us directly. We will get back to you quickly.',
     'ইমেইল': 'Email', 'অফিস': 'Office',
-    '২৯৩, কে.কে টাওয়ার (গ্রাউন্ড ফ্লোর), বন্দর, নারায়ণগঞ্জ-১৪১০': '293, K.K Tower (Ground Floor), Bandar, Narayanganj-1410',
+    'ম্যাপে ক্লিক করে ঘুরে দেখুন': 'Click to explore the map',
+    'চলমান': 'Running', 'সম্পন্ন': 'Completed', 'এই বিভাগে এখনো কোনো প্রজেক্ট নেই — শীঘ্রই আসছে।': 'No projects in this category yet — coming soon.',
     'আপনার নাম': 'Your name', 'মোবাইল নম্বর': 'Mobile number', 'কোন সেবা প্রয়োজন?': 'Which service do you need?',
     'নির্বাচন করুন': 'Select one', 'বার্তা': 'Message', 'বার্তা পাঠান': 'Send message',
     '✔ ধন্যবাদ! আমরা শীঘ্রই যোগাযোগ করব।': '✔ Thank you! We will contact you soon.',
@@ -99,11 +100,11 @@
     'আগের স্লাইড': 'Previous slide', 'পরের স্লাইড': 'Next slide', 'স্লাইড': 'Slide', 'মন্তব্য': 'Testimonial',
     'ভিডিও চালু করুন': 'Play video', 'ভিডিও': 'Video', 'বন্ধ করুন': 'Close', 'রেটিং': 'Rating',
     'আগের': 'Previous', 'পরের': 'Next', 'আগের ছবি': 'Previous photo', 'পরের ছবি': 'Next photo',
-    'Adnan Architects & Engineers সেবা সমূহ': 'Adnan Architects & Engineers services',
+    'Adnan Architects & Engineers সেবাসমূহ': 'Adnan Architects & Engineers services',
 
     // ---- portfolio / project / insights pages
     'আমাদের': 'Our', 'কাজ': 'Work',
-    'ফ্লোর প্ল্যান, ড্রইং ও ৩ডি ডিজাইনের নমুনা। যেকোনো প্রজেক্টে ক্লিক করে সব ছবি ও বিস্তারিত দেখুন।': 'Samples of floor plans, drawings and 3D designs. Click any project to see all photos and details.',
+    'ফ্লোর প্ল্যান, ড্রয়িং ও ৩ডি ডিজাইনের নমুনা। যেকোনো প্রজেক্টে ক্লিক করে সব ছবি ও বিস্তারিত দেখুন।': 'Samples of floor plans, drawings and 3D designs. Click any project to see all photos and details.',
     'আরও কাজ দেখতে আমাদের': 'To see more of our work, visit our', 'ভিজিট করুন।': '.',
     'আপনার প্লটের জন্য নকশা করাতে চান?': 'Want a design for your plot?',
     'জমির মাপ ও প্রয়োজন জানান, আমরা দ্রুত পরামর্শ দেব।': 'Tell us the plot size and your needs, and we will advise you quickly.',
@@ -115,7 +116,7 @@
     'ফোন করুন অথবা ফর্ম পূরণ করুন, আমরা দ্রুত যোগাযোগ করব।': 'Call us or fill in the form and we will get back to you quickly.',
     'আরও পড়ুন': 'Read more', 'সব ইনসাইট →': 'All insights →',
     'সব': 'All',
-    'টি ড্রইং': ' drawings',
+    'টি ড্রয়িং': ' drawings',
   };
 
   window.t = (s) => (window.LANG === 'en' && EN[s] !== undefined ? EN[s] : s);

@@ -32,3 +32,5 @@ database/test.sqlite
 !/public/uploads/.gitkeep
 !/public/uploads/.htaccess
 /public/uploads_test
+CLAUDE.md
+AGENTS.md
